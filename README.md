@@ -6,16 +6,16 @@
 
 ## ✅ Виконана робота
 
- Створено Dev-store у Partner Dashboard.
- Встановлено офіційну тему Dawn.
- Завантажено тему локально через CLI командою shopify theme pull.
- Створено GitHub репозиторій shopify-<назва-стору>.
- Завантажено код теми у GitHub.
- Створено гілку dev від main.
- Прив’язано теми у Shopify Admin до GitHub (main/dev).
- Створено feature-гілку feature-slider-change.
- У гілці feature-slider-change змінено вигляд дотсів для слайдера у файлах CSS, щоб вони відповідали макету у Figma.
- Виконано commit та відкрито Pull Request → merge у dev.
+ - Створено Dev-store у Partner Dashboard.
+ - Встановлено офіційну тему Dawn.
+ - Завантажено тему локально через CLI командою shopify theme pull.
+ - Створено GitHub репозиторій shopify-<назва-стору>.
+ - Завантажено код теми у GitHub.
+ - Створено гілку dev від main.
+ - Прив’язано теми у Shopify Admin до GitHub (main/dev).
+ - Створено feature-гілку feature-slider-change.
+ - У гілці feature-slider-change змінено вигляд дотсів для слайдера у файлах CSS, щоб вони відповідали макету у Figma.
+ - Виконано commit та відкрито Pull Request → merge у dev.
 
 ## 🔧 Технології та підходи
 
@@ -27,11 +27,10 @@
 
 ## 📝 Примітки
 
-Спочатку виникла проблема з командою shopify auth login — вирішено через shopify login --store.
-Базові зміни у Slideshow (Hero Banner) виконані через кастомайзер без коду.
-Для завдання з макетом у Figma довелось редагувати CSS (assets/base.css), щоб дотси слайдера збігалися за стилем і розташуванням.
+Для того, щоб змінити вигляд дотсів для слайдеру в "Hero секції" було змінини два файли в темі Dawn в папці assets: component-slider.css та component-slideshow.css
 
 🔗 Пов’язані ресурси
 
-GitHub репозиторій
-Гілка: feature-slider-change (замержена в dev)
+GitHub репозиторій(dev гілка): 
+Посилання на стор: https://tkachenko-oleksandr-test-store.myshopify.com/
+Пароль від стору: nowvol
