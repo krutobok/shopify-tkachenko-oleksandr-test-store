@@ -31,6 +31,6 @@
 
 🔗 Пов’язані ресурси
 
-GitHub репозиторій(dev гілка): 
-Посилання на стор: https://tkachenko-oleksandr-test-store.myshopify.com/
+- GitHub репозиторій(dev гілка): https://github.com/krutobok/shopify-tkachenko-oleksandr-test-store/tree/dev
+- Посилання на стор: https://tkachenko-oleksandr-test-store.myshopify.com/
 Пароль від стору: nowvol
