@@ -19,11 +19,11 @@
 
 ## 🔧 Технології та підходи
 
-Shopify Partner Dashboard
-Shopify CLI 3.84.1
-GitHub
-Theme Editor (Customize)
-CSS для зміни стилів слайдера
+- Shopify Partner Dashboard
+- Shopify CLI 3.84.1
+- GitHub
+- Theme Editor (Customize)
+- CSS для зміни стилів слайдера
 
 ## 📝 Примітки
 
