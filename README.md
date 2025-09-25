@@ -9,7 +9,7 @@
  - Створено Dev-store у Partner Dashboard.
  - Встановлено офіційну тему Dawn.
  - Завантажено тему локально через CLI командою shopify theme pull.
- - Створено GitHub репозиторій shopify-<назва-стору>.
+ - Створено GitHub репозиторій shopify-tkachenko-oleksandr-test-store.
  - Завантажено код теми у GitHub.
  - Створено гілку dev від main.
  - Прив’язано теми у Shopify Admin до GitHub (main/dev).
