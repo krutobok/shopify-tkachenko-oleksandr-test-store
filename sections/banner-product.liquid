@@ -1,0 +1,83 @@
+{% comment %}
+  Banner Product Section
+{% endcomment %}
+
+{% if section.settings.product != blank %}
+  {% assign current_product = all_products[section.settings.product] %}
+{% endif %}
+
+{% if current_product == blank %}
+  <p>No product selected</p>
+{% else %}
+  <div class="banner-product">
+    {%- if current_product.featured_image -%}
+      {{ current_product.featured_image | image_url: width: 600 | image_tag: alt: current_product.featured_image.alt | default: current_product.title }}
+    {%- else -%}
+      <img width="600" height="600" src="{{ 'placeholder.svg' | asset_url }}" alt="{{ current_product.title }}">
+    {%- endif -%}
+
+    <h3>{{ current_product.title | escape }}</h3>
+
+    {% capture price_block %}
+      {% if current_product.compare_at_price > current_product.price %}
+        <span class="price-sale">{{ current_product.price | money }}</span>
+        <span class="price-old">{{ current_product.compare_at_price | money }}</span>
+      {% else %}
+        <span class="price">{{ current_product.price | money }}</span>
+      {% endif %}
+    {% endcapture %}
+    {{ price_block }}
+
+    {% assign color_index = -1 %}
+    {% for option in current_product.options %}
+      {% assign option_downcase = option | downcase %}
+      {% if option_downcase contains 'color' %}
+        {% assign color_index = forloop.index0 %}
+      {% endif %}
+    {% endfor %}
+
+
+    {% if color_index != -1 %}
+      <div class="color-swatches">
+        {% for variant in current_product.variants limit:3 %}
+          <button 
+            data-variant-id="{{ variant.id }}" 
+            data-qty="{{ variant.inventory_quantity | default: 0 }}" 
+            data-available="{{ variant.available }}">
+            {{ variant.options[color_index] }}
+          </button>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p>No color options</p>
+    {% endif %}
+  </div>
+{% endif %}
+
+
+<script>
+document.querySelectorAll('.color-swatches button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const qty = btn.dataset.qty;
+    alert(qty == 0 ? "Не доступно" : `Доступно: ${qty}`);
+  });
+});
+</script>
+
+{% schema %}
+{
+  "name": "Banner Product",
+  "settings": [
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Select product"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Banner product"
+    }
+  ]
+}
+{% endschema %}
