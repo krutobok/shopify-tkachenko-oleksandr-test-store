@@ -87,13 +87,13 @@
                   >
                 </div>
                 {%- if current_product.featured_image -%}
-                     <img 
-                  class="product__color product__img--mini{% if forloop.first %} product__color--active{% endif %}"
+                <img 
+                  class="product__image"
                   src="{{ current_product.featured_image | image_url: width: 536, height: 536 }}"
                   width="536",
-                  height="536"
-                  alt
-                     >
+                  height="536",
+                  alt={{ current_product.featured_image.alt | default: current_product.title }}
+                >
                   {{ current_product.featured_image | image_url: width: 536 | image_tag: alt: current_product.featured_image.alt | default: current_product.title }}
                 {%- else -%}
                   <img class="product__image" width="536" height="536" src="{{ 'placeholder.svg' | asset_url }}" alt="{{ current_product.title }}">
@@ -136,7 +136,7 @@
                 <img 
                   class="product__color product__img--mini{% if forloop.first %} product__color--active{% endif %}"
                   src="{{ image | image_url: width: 88, height: 88 }}"
-                  width="88",
+                  width="88"
                   height="88"
                   alt="{% if image.alt != blank %}{{ image.alt }}{% elsif current_product.title != blank %}{{ current_product.title }}{% else %}Color option{% endif %}"
                   data-color="{{ color_value | escape }}"
