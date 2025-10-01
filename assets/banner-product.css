@@ -158,6 +158,9 @@
 
 .product__price {
   color: var(--secondary-color);
+  .price-old{
+    text-decoration: line-through;
+  }
 }
 
 .product__colors {
