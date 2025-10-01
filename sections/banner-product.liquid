@@ -101,38 +101,29 @@
                 </p>
               </div>
 
-              <div class="product__colors">
-                <img
-                  class="product__color product__color--active product__img--mini"
-                  src="images/products/nike_air_max_plus/color1-1.jpg"
-                  alt="white sneakers color"
-                  data-price="$260.00"
-                  data-color="1"
-                  data-alt-for-group="white Nike Air Max Plus"
-                  role="button"
-                  aria-label="set product color to white"
-                />
-                <img
-                  class="product__color product__img--mini"
-                  src="images/products/nike_air_max_plus/color2-1.jpg"
-                  alt="black sneakers color"
-                  data-price="$270.00"
-                  data-color="2"
-                  data-alt-for-group="black Nike Air Max Plus"
-                  role="button"
-                  aria-label="set product color to black"
-                />
-                <img
-                  class="product__color product__img--mini"
-                  src="images/products/nike_air_max_plus/color3-1.jpg"
-                  alt="pink sneakers color"
-                  data-price="$280.00"
-                  data-color="3"
-                  data-alt-for-group="pink Nike Air Max Plus"
-                  role="button"
-                  aria-label="set product color to pink"
-                />
-              </div>
+             {% if color_index != -1 %}
+  <div class="product__colors">
+    {% for variant in current_product.variants limit:3 %}
+      {% assign color_value = variant.options[color_index] %}
+      {% assign image = variant.featured_image %}
+      
+      <img 
+        class="product__color product__img--mini{% if forloop.first %} product__color--active{% endif %}"
+        src="{{ image | image_url: width: 88, height: 88 }}"
+        alt="{% if image.alt != blank %}{{ image.alt }}{% elsif current_product.title != blank %}{{ current_product.title }}{% else %}Color option{% endif %}"
+        data-color="{{ color_value | escape }}"
+        data-variant-id="{{ variant.id }}"
+        data-qty="{{ variant.inventory_quantity | default: 0 }}"
+        data-available="{{ variant.available }}"
+        role="button"
+        aria-label="Set product color to {{ color_value }}"
+      />
+    {% endfor %}
+  </div>
+{% else %}
+  <p>⚠️ No color option found for this product.</p>
+{% endif %}
+
               <div class="product__size-inner">
                 <p class="product__size-text text-medium">Select Size:</p>
                 <div class="product__sizes">
