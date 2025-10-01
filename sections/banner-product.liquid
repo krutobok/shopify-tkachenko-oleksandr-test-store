@@ -98,7 +98,15 @@
               <div class="product__text-inner">
                 <h2 class="product__title title-small">{{ current_product.title | escape }}</h2>
                 <p class="product__price text-large">
-                  $280.00
+                      {% capture price_block %}
+      {% if current_product.compare_at_price > current_product.price %}
+        <span class="price-sale">{{ current_product.price | money }}</span>
+        <span class="price-old">{{ current_product.compare_at_price | money }}</span>
+      {% else %}
+        <span class="price">{{ current_product.price | money }}</span>
+      {% endif %}
+    {% endcapture %}
+    {{ price_block }}
                 </p>
               </div>
 
