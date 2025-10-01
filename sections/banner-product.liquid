@@ -119,6 +119,8 @@
                 <img 
                   class="product__color product__img--mini{% if forloop.first %} product__color--active{% endif %}"
                   src="{{ image | image_url: width: 88, height: 88 }}"
+                  width="88",
+                  height="88"
                   alt="{% if image.alt != blank %}{{ image.alt }}{% elsif current_product.title != blank %}{{ current_product.title }}{% else %}Color option{% endif %}"
                   data-color="{{ color_value | escape }}"
                   data-variant-id="{{ variant.id }}"
@@ -130,7 +132,7 @@
               {% endfor %}
             </div>
           {% else %}
-            <p>⚠️ No color option found for this product.</p>
+            <p>No color option found for this product.</p>
           {% endif %}
 
               <div class="product__size-inner">
