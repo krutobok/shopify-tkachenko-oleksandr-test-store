@@ -118,11 +118,11 @@
               {%- endif -%}
             {%- endfor -%}
 
-          {% if color_index != -1 %}
+          {%- if color_index != -1 -%}
             <div class="product__colors">
-              {% for variant in current_product.variants limit:3 %}
-                {% assign color_value = variant.options[color_index] %}
-                {% assign image = variant.featured_image %}
+              {%- for variant in current_product.variants limit:3 -%}
+                {%- assign color_value = variant.options[color_index] -%}
+                {%- assign image = variant.featured_image -%}
                 
                 <img 
                   class="product__color product__img--mini{% if forloop.first %} product__color--active{% endif %}"
