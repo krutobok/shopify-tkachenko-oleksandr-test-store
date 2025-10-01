@@ -86,7 +86,7 @@
                     >Highly Rated</span
                   >
                 </div>
-                {%- if false -%}
+                {%- if current_product.featured_image -%}
                 <img 
                   class="product__image"
                   src="{{ current_product.featured_image | image_url: width: 536, height: 536 }}"
