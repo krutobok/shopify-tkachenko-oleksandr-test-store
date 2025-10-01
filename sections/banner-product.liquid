@@ -98,25 +98,25 @@
               <div class="product__text-inner">
                 <h2 class="product__title title-small">{{ current_product.title | escape }}</h2>
                 <p class="product__price text-large">
-                      {% capture price_block %}
-                        {% if current_product.compare_at_price > current_product.price %}
+                      {%- capture price_block -%}
+                        {%- if current_product.compare_at_price > current_product.price -%}
                           <span class="price-sale">{{ current_product.price | money_without_trailing_zeros }}</span>
                           <span class="price-old">{{ current_product.compare_at_price | money_without_trailing_zeros }}</span>
-                        {% else %}
+                        {%- else -%}
                           <span class="price">{{ current_product.price | money }}</span>
-                        {% endif %}
-                      {% endcapture %}
+                        {%- endif -%}
+                      {%- endcapture -%}
                       {{ price_block }}
                 </p>
               </div>
 
-          {% assign color_index = -1 %}
-            {% for option in current_product.options %}
-              {% assign opt_down = option | downcase %}
-              {% if opt_down contains 'color' or opt_down contains 'colour' or opt_down contains 'цвет' or opt_down contains 'колір' %}
-                {% assign color_index = forloop.index0 %}
-              {% endif %}
-            {% endfor %}
+          {%- assign color_index = -1 -%}
+            {%- for option in current_product.options -%}
+              {%- assign opt_down = option | downcase -%}
+              {%- if opt_down contains 'color' or opt_down contains 'colour' or opt_down contains 'цвет' or opt_down contains 'колір' -%}
+                {%- assign color_index = forloop.index0 -%}
+              {%- endif -%}
+            {%- endfor -%}
 
           {% if color_index != -1 %}
             <div class="product__colors">
