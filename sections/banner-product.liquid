@@ -103,12 +103,12 @@
               </div>
 
           {% assign color_index = -1 %}
-{% for option in current_product.options %}
-  {% assign opt_down = option | downcase %}
-  {% if opt_down contains 'color' or opt_down contains 'colour' or opt_down contains 'цвет' %}
-    {% assign color_index = forloop.index0 %}
-  {% endif %}
-{% endfor %}
+            {% for option in current_product.options %}
+              {% assign opt_down = option | downcase %}
+              {% if opt_down contains 'color' or opt_down contains 'colour' or opt_down contains 'цвет' or opt_down contains 'колір' %}
+                {% assign color_index = forloop.index0 %}
+              {% endif %}
+            {% endfor %}
 
           {% if color_index != -1 %}
             <div class="product__colors">
