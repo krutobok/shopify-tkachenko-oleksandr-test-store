@@ -11,9 +11,9 @@
 
  <section class="product section">
         <div class="container">
-{% if current_product == blank %}
+{%- if current_product == blank -%}
   <p>Product not found</p>
-{% else %}
+{%- else -%}
 
           <div class="product__wrapper">
             <div class="product__gallery">
@@ -160,12 +160,12 @@
               <button class="product__btn btn btn-dark">Add To Bag</button>
 
               <p class="product__desc text-medium">
-                {{ current_product.description | escape }}
+                {{- current_product.description | escape -}}
               </p>
             </div>
           </div>
     
-{% endif %}
+{%- endif -%}
     </div>
 </section>
 <script>
