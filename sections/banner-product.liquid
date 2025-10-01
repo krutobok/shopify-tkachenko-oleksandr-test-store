@@ -100,8 +100,8 @@
                 <p class="product__price text-large">
                       {% capture price_block %}
                         {% if current_product.compare_at_price > current_product.price %}
-                          <span class="price-sale">{{ current_product.price | money }}</span>
-                          <span class="price-old">{{ current_product.compare_at_price | money }}</span>
+                          <span class="price-sale">{{ current_product.price | money_without_trailing_zeros }}</span>
+                          <span class="price-old">{{ current_product.compare_at_price | money_without_trailing_zeros }}</span>
                         {% else %}
                           <span class="price">{{ current_product.price | money }}</span>
                         {% endif %}
