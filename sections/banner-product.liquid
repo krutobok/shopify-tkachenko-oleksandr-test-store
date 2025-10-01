@@ -95,7 +95,7 @@
                   alt="{{ current_product.featured_image.alt | default: current_product.title }}"
                 >                  
                 {%- else -%}
-                  <img class="product__image" width="536" height="536" src="{{ 'placeholder.svg' | asset_url }}" alt="{{ current_product.title }}">
+                  <img class="product__image" width="536" height="536" src="{{ 'placeholder.svg' | image_url: width: 536, height: 536 }}" alt="{{ current_product.title }}">
                 {%- endif -%}        
               </div>
             </div>
