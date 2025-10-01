@@ -81,21 +81,16 @@
                     class="product__badge-img"
                     src="images/icons/starIcon.svg"
                     alt="star icon"
-                  />
-                  {%- if current_product.featured_image -%}
-                    {{ current_product.featured_image | image_url: width: 600 | image_tag: alt: current_product.featured_image.alt | default: current_product.title }}
-                  {%- else -%}
-                    <img width="600" height="600" src="{{ 'placeholder.svg' | asset_url }}" alt="{{ current_product.title }}">
-                  {%- endif -%}
+                  />                  
                   <span class="product__badge-text text-medium"
                     >Highly Rated</span
                   >
                 </div>
-                <img
-                  class="product__image"
-                  src="images/products/nike_air_max_plus/color1-1.jpg"
-                  alt="white Nike Air Max Plus photo 1"
-                />
+                {%- if current_product.featured_image -%}
+                  {{ current_product.featured_image | image_url: width: 600 | image_tag: alt: current_product.featured_image.alt | default: current_product.title }}
+                {%- else -%}
+                  <img class="product__image" width="600" height="600" src="{{ 'placeholder.svg' | asset_url }}" alt="{{ current_product.title }}">
+                {%- endif -%}        
               </div>
             </div>
 
