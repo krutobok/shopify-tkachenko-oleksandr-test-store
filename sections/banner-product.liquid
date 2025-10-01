@@ -1,10 +1,169 @@
-{% comment %}
-  Banner Product Section
-{% endcomment %}
+{{ 'banner-product.css' | asset_url | stylesheet_tag }}
+
+
+
 
 {% if section.settings.product != blank %}
   {% assign current_product = all_products[section.settings.product] %}
+{% elsif section.settings.handle != blank %}
+  {% assign current_product = all_products[section.settings.handle] %}
 {% endif %}
+ <section class="product section">
+        <div class="container">
+{% if current_product == blank %}
+  <p>Product not found</p>
+{% else %}
+
+          <div class="product__wrapper">
+            <div class="product__gallery">
+              <div class="product__thumbnails" role="tablist">
+                <button
+                  class="product__thumb product__thumb--active"
+                  aria-label="change main product photo to photo 1"
+                  aria-selected="true"
+                >
+                  <img
+                    class="product__thumb-img product__img--mini"
+                    src="images/products/nike_air_max_plus/color1-1.jpg"
+                    alt="white Nike Air Max Plus photo 1"
+                  />
+                </button>
+                <button
+                  class="product__thumb"
+                  aria-label="change main product photo to photo 2"
+                  aria-selected="false"
+                >
+                  <img
+                    class="product__thumb-img product__img--mini"
+                    src="images/products/nike_air_max_plus/color1-2.jpg"
+                    alt="white Nike Air Max Plus photo 2"
+                  />
+                </button>
+                <button
+                  class="product__thumb"
+                  aria-label="change main product photo to photo 3"
+                  aria-selected="false"
+                >
+                  <img
+                    class="product__thumb-img product__img--mini"
+                    src="images/products/nike_air_max_plus/color1-3.jpg"
+                    alt="white Nike Air Max Plus photo 3"
+                  />
+                </button>
+                <button
+                  class="product__thumb"
+                  aria-label="change main product photo to photo 4"
+                  aria-selected="false"
+                >
+                  <img
+                    class="product__thumb-img product__img--mini"
+                    src="images/products/nike_air_max_plus/color1-4.jpg"
+                    alt="white Nike Air Max Plus photo 4"
+                  />
+                </button>
+                <button
+                  class="product__thumb"
+                  aria-label="change main product photo to photo 5"
+                  aria-selected="false"
+                >
+                  <img
+                    class="product__thumb-img product__img--mini"
+                    src="images/products/nike_air_max_plus/color1-5.jpg"
+                    alt="white Nike Air Max Plus photo 5"
+                  />
+                </button>
+              </div>
+
+              <div class="product__main">
+                <div class="product__badge">
+                  <img
+                    class="product__badge-img"
+                    src="images/icons/starIcon.svg"
+                    alt="star icon"
+                  />
+                  <span class="product__badge-text text-medium"
+                    >Highly Rated</span
+                  >
+                </div>
+                <img
+                  class="product__image"
+                  src="images/products/nike_air_max_plus/color1-1.jpg"
+                  alt="white Nike Air Max Plus photo 1"
+                />
+              </div>
+            </div>
+
+            <div class="product__info">
+              <div class="product__text-inner">
+                <h2 class="product__title title-small">{{ current_product.title | escape }}</h2>
+                <p class="product__price text-large" data-price="$280.00">
+                  $280.00
+                </p>
+              </div>
+
+              <div class="product__colors">
+                <img
+                  class="product__color product__color--active product__img--mini"
+                  src="images/products/nike_air_max_plus/color1-1.jpg"
+                  alt="white sneakers color"
+                  data-price="$260.00"
+                  data-color="1"
+                  data-alt-for-group="white Nike Air Max Plus"
+                  role="button"
+                  aria-label="set product color to white"
+                />
+                <img
+                  class="product__color product__img--mini"
+                  src="images/products/nike_air_max_plus/color2-1.jpg"
+                  alt="black sneakers color"
+                  data-price="$270.00"
+                  data-color="2"
+                  data-alt-for-group="black Nike Air Max Plus"
+                  role="button"
+                  aria-label="set product color to black"
+                />
+                <img
+                  class="product__color product__img--mini"
+                  src="images/products/nike_air_max_plus/color3-1.jpg"
+                  alt="pink sneakers color"
+                  data-price="$280.00"
+                  data-color="3"
+                  data-alt-for-group="pink Nike Air Max Plus"
+                  role="button"
+                  aria-label="set product color to pink"
+                />
+              </div>
+              <div class="product__size-inner">
+                <p class="product__size-text text-medium">Select Size:</p>
+                <div class="product__sizes">
+                  <button class="product__size product__size--active btn">
+                    UK 5.5
+                  </button>
+                  <button class="product__size btn">UK 6 (EU 39)</button>
+                  <button class="product__size btn">UK 6 (EU 40)</button>
+                  <button class="product__size btn">UK 6.5</button>
+                  <button class="product__size btn">UK 7</button>
+                  <button class="product__size btn">UK 7.5</button>
+                </div>
+              </div>
+
+              <button class="product__btn btn btn-dark">Add To Bag</button>
+
+              <p class="product__desc text-medium">
+                Let your attitude have the edge in your Nike Air Max Plus, a
+                Tuned Air experience that offers premium stability and
+                unbelievable cushioning.
+              </p>
+            </div>
+          </div>
+    
+{% endif %}
+    </div>
+</section>
+
+
+
+{% comment %} 
 
 {% if current_product == blank %}
   <p>No product selected</p>
@@ -62,7 +221,7 @@ document.querySelectorAll('.color-swatches button').forEach(btn => {
     alert(qty == 0 ? "Не доступно" : `Доступно: ${qty}`);
   });
 });
-</script>
+</script> {% endcomment %}
 
 {% schema %}
 {
@@ -72,6 +231,12 @@ document.querySelectorAll('.color-swatches button').forEach(btn => {
       "type": "product",
       "id": "product",
       "label": "Select product"
+    },
+    {
+      "type": "text",
+      "id": "handle",
+      "label": "Or enter product handle",
+      "default": "none"
     }
   ],
   "presets": [
