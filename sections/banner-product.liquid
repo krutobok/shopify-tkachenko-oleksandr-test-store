@@ -159,8 +159,20 @@
     
 {% endif %}
     </div>
-</section>
 
+</section>
+<script>
+document.querySelectorAll('.product__colors .product__img--mini').forEach(img => {
+  img.addEventListener('click', () => {
+    const qty = img.dataset.qty;
+    if (qty == 0) {
+      alert("Не доступно");
+    } else {
+      alert(`Доступно: ${qty}`);
+    }
+  });
+});
+</script>
 
 
 {% comment %} 
