@@ -8,6 +8,7 @@
 {% elsif section.settings.handle != blank %}
   {% assign current_product = all_products[section.settings.handle] %}
 {% endif %}
+
  <section class="product section">
         <div class="container">
 {% if current_product == blank %}
@@ -101,28 +102,36 @@
                 </p>
               </div>
 
-             {% if color_index != -1 %}
-  <div class="product__colors">
-    {% for variant in current_product.variants limit:3 %}
-      {% assign color_value = variant.options[color_index] %}
-      {% assign image = variant.featured_image %}
-      
-      <img 
-        class="product__color product__img--mini{% if forloop.first %} product__color--active{% endif %}"
-        src="{{ image | image_url: width: 88, height: 88 }}"
-        alt="{% if image.alt != blank %}{{ image.alt }}{% elsif current_product.title != blank %}{{ current_product.title }}{% else %}Color option{% endif %}"
-        data-color="{{ color_value | escape }}"
-        data-variant-id="{{ variant.id }}"
-        data-qty="{{ variant.inventory_quantity | default: 0 }}"
-        data-available="{{ variant.available }}"
-        role="button"
-        aria-label="Set product color to {{ color_value }}"
-      />
-    {% endfor %}
-  </div>
-{% else %}
-  <p>⚠️ No color option found for this product.</p>
-{% endif %}
+          {% assign color_index = -1 %}
+{% for option in current_product.options %}
+  {% assign opt_down = option | downcase %}
+  {% if opt_down contains 'color' or opt_down contains 'colour' or opt_down contains 'цвет' %}
+    {% assign color_index = forloop.index0 %}
+  {% endif %}
+{% endfor %}
+
+          {% if color_index != -1 %}
+            <div class="product__colors">
+              {% for variant in current_product.variants limit:3 %}
+                {% assign color_value = variant.options[color_index] %}
+                {% assign image = variant.featured_image %}
+                
+                <img 
+                  class="product__color product__img--mini{% if forloop.first %} product__color--active{% endif %}"
+                  src="{{ image | image_url: width: 88, height: 88 }}"
+                  alt="{% if image.alt != blank %}{{ image.alt }}{% elsif current_product.title != blank %}{{ current_product.title }}{% else %}Color option{% endif %}"
+                  data-color="{{ color_value | escape }}"
+                  data-variant-id="{{ variant.id }}"
+                  data-qty="{{ variant.inventory_quantity | default: 0 }}"
+                  data-available="{{ variant.available }}"
+                  role="button"
+                  aria-label="Set product color to {{ color_value }}"
+                />
+              {% endfor %}
+            </div>
+          {% else %}
+            <p>⚠️ No color option found for this product.</p>
+          {% endif %}
 
               <div class="product__size-inner">
                 <p class="product__size-text text-medium">Select Size:</p>
