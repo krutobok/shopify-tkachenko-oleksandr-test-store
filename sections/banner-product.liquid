@@ -152,6 +152,25 @@
   </div>
 </section>
 <script>
+  const thumbs = document.querySelectorAll('.product__thumb');
+  const mainImage = document.querySelector('.product__image');
+
+  thumbs.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      // 1. Змінити головне зображення
+      const newImage = btn.dataset.image;
+      mainImage.src = newImage;
+
+      // 2. Оновити aria-selected і клас активної кнопки
+      thumbs.forEach((t) => {
+        t.classList.remove('product__thumb--active');
+        t.setAttribute('aria-selected', 'false');
+      });
+
+      btn.classList.add('product__thumb--active');
+      btn.setAttribute('aria-selected', 'true');
+    });
+  });
   document.querySelectorAll('.product__colors .product__img--mini').forEach((btn) => {
     btn.addEventListener('click', () => {
       alert(btn.dataset.message);
