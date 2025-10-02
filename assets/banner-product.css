@@ -76,10 +76,13 @@
   flex-shrink: 0;
 }
 
-.product__thumbnails {
-  display: flex;
+.product__thumbnails-set {
+  display: none;
   flex-direction: column;
   justify-content: space-between;
+}
+.product__thumbnails-set.active {
+  display: flex;
 }
 
 .product__thumb {
@@ -96,7 +99,7 @@
 }
 
 .product__thumb--active::after {
-  content: '';
+  content: "";
   position: absolute;
   display: block;
   top: 0;

@@ -12,25 +12,47 @@
       <p>Product not found</p>
     {%- else -%}
       <div class="product__wrapper">
+        {%- assign color_index = -1 -%}
+        {%- for option in current_product.options -%}
+          {%- assign opt_down = option | downcase -%}
+          {%- if opt_down contains 'color'
+            or opt_down contains 'colour'
+            or opt_down contains 'цвет'
+            or opt_down contains 'колір'
+          -%}
+            {%- assign color_index = forloop.index0 -%}
+          {%- endif -%}
+        {%- endfor -%}
+
         <div class="product__gallery">
-          <div class="product__thumbnails" role="tablist">
-            {% for image in current_product.images limit: 5 %}
-              <button
-                class="product__thumb {% if forloop.first %}product__thumb--active{% endif %}"
-                aria-label="Change main product photo to photo {{ forloop.index }}"
-                aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
-                data-image="{{ image | image_url: width: 536 }}"
-              >
-                <img
-                  class="product__thumb-img product__img--mini"
-                  width="88"
-                  height="88"
-                  src="{{ image | image_url: width: 88, height: 88 }}"
-                  alt="{% if image.alt != blank %}{{ image.alt }}{% elsif current_product.title != blank %}{{ current_product.title }} photo {{ forloop.index }}{% else %}Product photo {{ forloop.index }}{% endif %}"
-                >
-              </button>
-            {% endfor %}
-          </div>
+          {% for variant in current_product.variants %}
+            {% assign color_value = variant.options[color_index] | handleize %}
+            <div class="product__thumbnails-set {% if forloop.first %}active{% endif %}" data-color="{{ color_value }}">
+              {% assign count = 0 %}
+              {% for image in current_product.images %}
+                {% assign img_name = image.src | split: '/' | last | split: '.' | first | downcase %}
+                {% if img_name contains color_value %}
+                  {% assign count = count | plus: 1 %}
+                  {% if count <= 5 %}
+                    <button
+                      class="product__thumb {% if count == 1 %}product__thumb--active{% endif %}"
+                      aria-label="Change main product photo to {{ color_value }} photo {{ count }}"
+                      aria-selected="{% if count == 1 %}true{% else %}false{% endif %}"
+                      data-image="{{ image | image_url: width: 536 }}"
+                    >
+                      <img
+                        class="product__thumb-img product__img--mini"
+                        width="88"
+                        height="88"
+                        src="{{ image | image_url: width: 88, height: 88 }}"
+                        alt="{{ image.alt | default: current_product.title | default: 'Product photo' }}"
+                      >
+                    </button>
+                  {% endif %}
+                {% endif %}
+              {% endfor %}
+            </div>
+          {% endfor %}
 
           <div class="product__main">
             {% comment %}
@@ -83,18 +105,6 @@
             {% endif %}
           </div>
 
-          {%- assign color_index = -1 -%}
-          {%- for option in current_product.options -%}
-            {%- assign opt_down = option | downcase -%}
-            {%- if opt_down contains 'color'
-              or opt_down contains 'colour'
-              or opt_down contains 'цвет'
-              or opt_down contains 'колір'
-            -%}
-              {%- assign color_index = forloop.index0 -%}
-            {%- endif -%}
-          {%- endfor -%}
-
           {%- if color_index != -1 -%}
             <div
               class="product__colors"
@@ -110,7 +120,7 @@
                   width="88"
                   height="88"
                   alt="{% if image.alt != blank %}{{ image.alt }}{% elsif current_product.title != blank %}{{ current_product.title }}{% else %}Color option{% endif %}"
-                  data-color="{{- color_value | escape -}}"
+                  data-color="{{- color_value | handleize -}}"
                   data-variant-id="{{- variant.id -}}"
                   data-message="
                     {%- if variant.inventory_quantity > 0 -%}
@@ -152,16 +162,36 @@
   </div>
 </section>
 <script>
+  const colorButtons = document.querySelectorAll('.product__color');
   const thumbs = document.querySelectorAll('.product__thumb');
+  const thumbnailSets = document.querySelectorAll('.product__thumbnails-set');
   const mainImage = document.querySelector('.product__image');
 
+  colorButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const selectedColor = btn.dataset.color.toLowerCase().replace(/\s+/g, '-');
+
+      colorButtons.forEach((c) => c.classList.remove('product__color--active'));
+      btn.classList.add('product__color--active');
+      thumbnailSets.forEach((set) => set.classList.remove('active'));
+
+      const activeSet = document.querySelector(`.product__thumbnails-set[data-color="${selectedColor}"]`);
+      if (activeSet) {
+        activeSet.classList.add('active');
+
+        const firstThumb = activeSet.querySelector('.product__thumb');
+        if (firstThumb) {
+          mainImage.src = firstThumb.dataset.image;
+        }
+      }
+      alert(btn.dataset.message);
+    });
+  });
   thumbs.forEach((btn) => {
     btn.addEventListener('click', () => {
-      // 1. Змінити головне зображення
       const newImage = btn.dataset.image;
       mainImage.src = newImage;
 
-      // 2. Оновити aria-selected і клас активної кнопки
       thumbs.forEach((t) => {
         t.classList.remove('product__thumb--active');
         t.setAttribute('aria-selected', 'false');
@@ -169,11 +199,6 @@
 
       btn.classList.add('product__thumb--active');
       btn.setAttribute('aria-selected', 'true');
-    });
-  });
-  document.querySelectorAll('.product__colors .product__img--mini').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      alert(btn.dataset.message);
     });
   });
 </script>
