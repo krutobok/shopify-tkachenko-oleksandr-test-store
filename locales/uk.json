@@ -1,0 +1,9 @@
+{
+  "product": {
+    "banner": {
+      "not_available": "Не доступно",
+      "available_with_count": "Доступно: {{ count }}",
+      "select_color": "Оберіть колір"
+    }
+  }
+}

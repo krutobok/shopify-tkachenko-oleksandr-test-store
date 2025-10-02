@@ -18,84 +18,45 @@
           <div class="product__wrapper">
             <div class="product__gallery">
               <div class="product__thumbnails" role="tablist">
-                <button
-                  class="product__thumb product__thumb--active"
-                  aria-label="change main product photo to photo 1"
-                  aria-selected="true"
-                >
-                  <img
-                    class="product__thumb-img product__img--mini"
-                    src="images/products/nike_air_max_plus/color1-1.jpg"
-                    alt="white Nike Air Max Plus photo 1"
-                  />
-                </button>
-                <button
-                  class="product__thumb"
-                  aria-label="change main product photo to photo 2"
-                  aria-selected="false"
-                >
-                  <img
-                    class="product__thumb-img product__img--mini"
-                    src="images/products/nike_air_max_plus/color1-2.jpg"
-                    alt="white Nike Air Max Plus photo 2"
-                  />
-                </button>
-                <button
-                  class="product__thumb"
-                  aria-label="change main product photo to photo 3"
-                  aria-selected="false"
-                >
-                  <img
-                    class="product__thumb-img product__img--mini"
-                    src="images/products/nike_air_max_plus/color1-3.jpg"
-                    alt="white Nike Air Max Plus photo 3"
-                  />
-                </button>
-                <button
-                  class="product__thumb"
-                  aria-label="change main product photo to photo 4"
-                  aria-selected="false"
-                >
-                  <img
-                    class="product__thumb-img product__img--mini"
-                    src="images/products/nike_air_max_plus/color1-4.jpg"
-                    alt="white Nike Air Max Plus photo 4"
-                  />
-                </button>
-                <button
-                  class="product__thumb"
-                  aria-label="change main product photo to photo 5"
-                  aria-selected="false"
-                >
-                  <img
-                    class="product__thumb-img product__img--mini"
-                    src="images/products/nike_air_max_plus/color1-5.jpg"
-                    alt="white Nike Air Max Plus photo 5"
-                  />
-                </button>
+                {% for image in current_product.images limit:5 %}
+                  <button
+                    class="product__thumb {% if forloop.first %}product__thumb--active{% endif %}"
+                    aria-label="Change main product photo to photo {{ forloop.index }}"
+                    aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+                    data-image="{{ image | image_url: width: 536 }}"
+                  >
+                    <img
+                      class="product__thumb-img product__img--mini"
+                      width="88"
+                      height="88"
+                      src="{{ image | image_url: width: 88, height: 88 }}"
+                      alt="{% if image.alt != blank %}{{ image.alt }}{% elsif current_product.title != blank %}{{ current_product.title }} photo {{ forloop.index }}{% else %}Product photo {{ forloop.index }}{% endif %}"
+                    />
+                  </button>
+                {% endfor %}              
               </div>
 
               <div class="product__main">
-                <div class="product__badge">
-                  <img
+                {% comment %}  <div class="product__badge">
+                 <img
                     class="product__badge-img"
                     src="images/icons/starIcon.svg"
                     alt="star icon"
-                  />                  
+                  />                   
                   <span class="product__badge-text text-medium"
                     >Highly Rated</span
                   >
-                </div>
+                </div>{% endcomment %}
                 {%- if current_product.featured_image -%}
                 <img 
                   class="product__image"
                   src="{{ current_product.featured_image | image_url: width: 536, height: 536 }}"
-                  width="536",
-                  height="536",
-                  alt="{{ current_product.featured_image.alt | default: current_product.title }}"
-                >                  
+                  width="536"
+                  height="536"
+                  alt="{{ current_product.featured_image.alt | default: current_product.title | default: 'Фото товару' }}"
+                >                 
                 {%- else -%}
-                  <img class="product__image" width="536" height="536" src="{{ 'placeholder.svg' | image_url: width: 536, height: 536 }}" alt="{{ current_product.title }}">
+                  <img class="product__image" width="536" height="536" src="{{ 'placeholder.svg' | image_url: width: 536, height: 536 }}" alt="{{ current_product.title | default: 'Фото товару' }}">
                 {%- endif -%}        
               </div>
             </div>
@@ -128,6 +89,7 @@
 
           {%- if color_index != -1 -%}
             <div class="product__colors">
+              {{ 'product.banner.select_color' | t: default: "Оберіть колір" }}
               {%- for variant in current_product.variants limit:3 -%}
                 {%- assign color_value = variant.options[color_index] -%}
                 {%- assign image = variant.featured_image -%}
@@ -168,7 +130,7 @@
               <button class="product__btn btn btn-dark">Add To Bag</button>
 
               <p class="product__desc text-medium">
-                {{- current_product.description | escape -}}
+                {{- current_product.description | default: 'Для цього товару відсутній опис' | escape -}}
               </p>
             </div>
           </div>
@@ -177,78 +139,19 @@
     </div>
 </section>
 <script>
-document.querySelectorAll('.product__colors .product__img--mini').forEach(img => {
-  img.addEventListener('click', () => {
-    const qty = img.dataset.qty;
-    if (qty == 0) {
-      alert("Не доступно");
-    } else {
-      alert(`Доступно: ${qty}`);
-    }
+  document.querySelectorAll('.product__colors .product__img--mini').forEach(img => {
+    img.addEventListener('click', () => {
+      const qty = img.dataset.qty;
+      if (qty == 0) {
+        alert("Не доступно");
+      } else {
+        alert(`Доступно: ${qty}`);
+      }
+    });
   });
-});
 </script>
 
 
-{% comment %} 
-
-{% if current_product == blank %}
-  <p>No product selected</p>
-{% else %}
-  <div class="banner-product">
-    {%- if current_product.featured_image -%}
-      {{ current_product.featured_image | image_url: width: 600 | image_tag: alt: current_product.featured_image.alt | default: current_product.title }}
-    {%- else -%}
-      <img width="600" height="600" src="{{ 'placeholder.svg' | asset_url }}" alt="{{ current_product.title }}">
-    {%- endif -%}
-
-    <h3>{{ current_product.title | escape }}</h3>
-
-    {% capture price_block %}
-      {% if current_product.compare_at_price > current_product.price %}
-        <span class="price-sale">{{ current_product.price | money }}</span>
-        <span class="price-old">{{ current_product.compare_at_price | money }}</span>
-      {% else %}
-        <span class="price">{{ current_product.price | money }}</span>
-      {% endif %}
-    {% endcapture %}
-    {{ price_block }}
-
-    {% assign color_index = -1 %}
-    {% for option in current_product.options %}
-      {% assign option_downcase = option | downcase %}
-      {% if option_downcase contains 'color' %}
-        {% assign color_index = forloop.index0 %}
-      {% endif %}
-    {% endfor %}
-
-
-    {% if color_index != -1 %}
-      <div class="color-swatches">
-        {% for variant in current_product.variants limit:3 %}
-          <button 
-            data-variant-id="{{ variant.id }}" 
-            data-qty="{{ variant.inventory_quantity | default: 0 }}" 
-            data-available="{{ variant.available }}">
-            {{ variant.options[color_index] }}
-          </button>
-        {% endfor %}
-      </div>
-    {% else %}
-      <p>No color options</p>
-    {% endif %}
-  </div>
-{% endif %}
-
-
-<script>
-document.querySelectorAll('.color-swatches button').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const qty = btn.dataset.qty;
-    alert(qty == 0 ? "Не доступно" : `Доступно: ${qty}`);
-  });
-});
-</script> {% endcomment %}
 
 {% schema %}
 {
