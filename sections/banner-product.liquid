@@ -55,18 +55,7 @@
           {% endfor %}
 
           <div class="product__main">
-            {% comment %}
-              <div class="product__badge">
-               <img
-                  class="product__badge-img"
-                  src="images/icons/starIcon.svg"
-                  alt="star icon"
-                />
-                <span class="product__badge-text text-medium"
-                  >Highly Rated</span
-                >
-              </div>
-            {% endcomment %}
+            {% render 'product-badge', product: current_product %}
             {%- if current_product.featured_image -%}
               <img
                 class="product__image"
@@ -91,17 +80,7 @@
           <div class="product__text-inner">
             <h2 class="product__title title-small">{{ current_product.title | escape }}</h2>
             {% if current_product.price != blank %}
-              <p class="product__price text-large">
-                {%- capture price_block -%}
-                        {%- if current_product.compare_at_price > current_product.price -%}
-                          <span class="price-sale">{{ current_product.price | money_without_trailing_zeros }}</span>
-                          <span class="price-old">{{ current_product.compare_at_price | money_without_trailing_zeros }}</span>
-                        {%- else -%}
-                          <span class="price">{{ current_product.price | money }}</span>
-                        {%- endif -%}
-                      {%- endcapture -%}
-                {{ price_block }}
-              </p>
+              {% render 'product-price', product: current_product %}
             {% endif %}
           </div>
 
@@ -110,30 +89,7 @@
               class="product__colors"
             >
               {{ 'product.banner.select_color' | t: default: 'Оберіть колір' }}
-              {%- for variant in current_product.variants limit: 3 -%}
-                {%- assign color_value = variant.options[color_index] -%}
-                {%- assign image = variant.featured_image -%}
-
-                <img
-                  class="product__color product__img--mini{% if forloop.first %} product__color--active{% endif %}"
-                  src="{{ image | image_url: width: 88, height: 88 }}"
-                  width="88"
-                  height="88"
-                  alt="{% if image.alt != blank %}{{ image.alt }}{% elsif current_product.title != blank %}{{ current_product.title }}{% else %}Color option{% endif %}"
-                  data-color="{{- color_value | handleize -}}"
-                  data-variant-id="{{- variant.id -}}"
-                  data-message="
-                    {%- if variant.inventory_quantity > 0 -%}
-                     {{ 'product.banner.available_with_count' | t: count: variant.inventory_quantity | default: 'Доступно: %count%' | replace: '%count%', variant.inventory_quantity }}
-                    {%- else -%}
-                      {{- 'product.banner.not_available' | t: default: 'Не доступно' -}}
-                    {%- endif -%}
-                  "
-                  data-available="{{ variant.available }}"
-                  role="button"
-                  aria-label="Set product color to {{ color_value }}"
-                >
-              {%- endfor -%}
+              {% render 'product-colors', product: current_product, color_index: color_index %}
             </div>
           {%- else -%}
             <p>No color option found for this product.</p>
@@ -151,7 +107,13 @@
             </div>
           </div>
 
-          <button class="product__btn btn btn-dark">Add To Bag</button>
+          <a
+            id="add-to-cart-link"
+            href="{{routes.cart_add_url}}?id={{ current_product.selected_or_first_available_variant.id }}&quantity=1"
+            class="product__btn btn btn-dark"
+          >
+            Add To Bag
+          </a>
 
           <p class="product__desc text-medium">
             {{- current_product.description | default: 'Для цього товару відсутній опис' | escape -}}
@@ -166,6 +128,7 @@
   const thumbs = document.querySelectorAll('.product__thumb');
   const thumbnailSets = document.querySelectorAll('.product__thumbnails-set');
   const mainImage = document.querySelector('.product__image');
+  const addToCartLink = document.getElementById('add-to-cart-link');
 
   colorButtons.forEach((btn) => {
     btn.addEventListener('click', () => {
@@ -183,6 +146,10 @@
         if (firstThumb) {
           mainImage.src = firstThumb.dataset.image;
         }
+      }
+      const variantId = btn.dataset.variantId;
+      if (variantId) {
+        addToCartLink.href = `/cart/add?id=${variantId}&quantity=1`;
       }
       alert(btn.dataset.message);
     });

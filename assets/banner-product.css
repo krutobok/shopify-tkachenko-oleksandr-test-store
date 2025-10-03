@@ -144,6 +144,9 @@
   border-radius: 4px;
   background-color: var(--primary-bg-color);
   padding: 8px;
+  .badge {
+    color: var(--primary-color);
+  }
 }
 
 .product__info {
@@ -195,4 +198,9 @@
 .product__desc {
   color: var(--secondary-color);
   padding: 0;
+}
+.product__btn {
+  display: block;
+  text-align: center;
+  text-decoration: none;
 }
