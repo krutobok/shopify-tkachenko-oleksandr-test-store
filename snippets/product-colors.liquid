@@ -17,6 +17,8 @@
         {{ 'product.banner.not_available' | t: default: 'Не доступно' }}
       {%- endif -%}
     "
+    data-price="{{ variant.price | money_without_trailing_zeros }}"
+    data-compare-price="{{ variant.compare_at_price | money_without_trailing_zeros }}"
     data-available="{{ variant.available }}"
     role="button"
     aria-label="Set product color to {{ color_value }}"

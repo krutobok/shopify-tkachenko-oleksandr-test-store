@@ -128,6 +128,7 @@
   const thumbs = document.querySelectorAll('.product__thumb');
   const thumbnailSets = document.querySelectorAll('.product__thumbnails-set');
   const mainImage = document.querySelector('.product__image');
+  const priceWrapper = document.querySelector('.product__price');
   const addToCartLink = document.getElementById('add-to-cart-link');
 
   colorButtons.forEach((btn) => {
@@ -150,6 +151,21 @@
       const variantId = btn.dataset.variantId;
       if (variantId) {
         addToCartLink.href = `/cart/add?id=${variantId}&quantity=1`;
+      }
+      const price = btn.dataset.price;
+      const comparePrice = btn.dataset.comparePrice;
+      if (
+        comparePrice &&
+        parseFloat(comparePrice.replace(/[^0-9.]/g, '')) > parseFloat(price.replace(/[^0-9.]/g, ''))
+      ) {
+        priceWrapper.innerHTML = `
+        <span class="price-sale">${price}</span>
+        <span class="price-old">${comparePrice}</span>
+      `;
+      } else {
+        priceWrapper.innerHTML = `
+        <span class="price">${price}</span>
+      `;
       }
       alert(btn.dataset.message);
     });
