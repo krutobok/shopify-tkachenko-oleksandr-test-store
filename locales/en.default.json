@@ -536,5 +536,12 @@
       "send_on": "YYYY-MM-DD",
       "send_on_label": "Send on (optional)"
     }
+  },
+  "product": {
+    "banner": {
+      "not_available": "Not available",
+      "available_with_count": "Available: {{ count }}",
+      "select_color": "Select a color"
+    }
   }
 }

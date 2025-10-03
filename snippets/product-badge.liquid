@@ -1,0 +1,13 @@
+<div class="product__badge">
+  {% assign vendor_down = product.vendor | downcase %}
+  {% case vendor_down %}
+    {% when 'nike' %}
+      <span class="badge badge--nike">🔥 Top Seller</span>
+    {% when 'adidas' %}
+      <span class="badge badge--adidas">⭐ Premium</span>
+    {% when 'puma' %}
+      <span class="badge badge--puma">💎 Exclusive</span>
+    {% else %}
+      <span class="badge badge--default">🆕 New</span>
+  {% endcase %}
+</div>
