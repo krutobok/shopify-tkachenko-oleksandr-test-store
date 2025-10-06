@@ -4,6 +4,11 @@
   {% assign current_product = all_products[section.settings.product] %}
 {% elsif section.settings.handle != blank %}
   {% assign current_product = all_products[section.settings.handle] %}
+{% else %}
+  {% assign first_product = collections.all.products.first %}
+  {% if first_product %}
+    {% assign current_product = first_product %}
+  {% endif %}
 {% endif %}
 
 <section class="product section">

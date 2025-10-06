@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}">
+  <head>
+    <meta charset="utf-8">
+    <title>{{ 'gift_card.title' | t: default: 'Кошик' }}</title>
+    {{ content_for_header }}
+  </head>
+  <body>
+    <main role="main">
+      <h1>{{ 'gift_card.title' | t: default: 'Кошик' }}</h1>
+      <code>{{ gift_card.code }}</code>
+    </main>
+  </body>
+</html>

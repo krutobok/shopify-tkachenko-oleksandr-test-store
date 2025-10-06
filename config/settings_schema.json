@@ -1,0 +1,11 @@
+[
+  {
+    "name": "Theme settings",
+    "settings": [{
+        "type": "text",
+        "id": "dummy_setting",
+        "label": "Dummy setting",
+        "default": "Dummy default"
+      }]
+  }
+]

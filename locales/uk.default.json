@@ -21,5 +21,8 @@
       "available_with_count": "Доступно: {{ count }}",
       "select_color": "Оберіть колір"
     }
+  },
+  "gift_card":{
+    "title": "Кошик"
   }
 }
