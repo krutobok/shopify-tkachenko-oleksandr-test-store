@@ -1,0 +1,25 @@
+{
+  "header": { "cart": "Кошик" },
+  "footer": {
+    "login": "Вхід",
+    "search": "Пошук",
+    "copyright": "Всі права захищені"
+  },
+  "a11y": {
+    "open_cart": "Відкрити кошик",
+    "footer_nav": "Навігація у футері",
+    "main_nav": "Головне меню"
+  },
+  "nav": { "shop_all": "Усі товари" },
+  "teaser": {
+    "title": "Рекомендовані товари",
+    "empty": "У цій колекції поки немає товарів"
+  },
+  "product": {
+    "banner": {
+      "not_available": "Не доступно",
+      "available_with_count": "Доступно: {{ count }}",
+      "select_color": "Оберіть колір"
+    }
+  }
+}

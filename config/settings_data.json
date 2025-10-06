@@ -1,0 +1,22 @@
+{
+  "current": "Default",
+  "presets": {
+    "Default": {
+      "name": "Default",
+      "settings": {},
+      "blocks": {},
+      "sections": {
+        "header": {
+          "type": "header",
+          "settings": {}
+        },
+        "footer": {
+          "type": "footer",
+          "settings": {}
+        }
+      },
+      "order": ["header", "footer"]
+    }
+  },
+  "current_locale": "uk"
+}
