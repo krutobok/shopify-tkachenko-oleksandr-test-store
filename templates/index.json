@@ -155,7 +155,57 @@
       "type": "banner-product",
       "name": "Banner product",
       "settings": {
-        "product": "nike-air-max-plus"
+        "product": "nike-air-max-plus",
+        "handle": "none"
+      }
+    },
+    "promo_banners_iYU9Vm": {
+      "type": "promo-banners",
+      "blocks": {
+        "banner_EKXXdn": {
+          "type": "banner",
+          "settings": {
+            "image": "shopify://shop_images/White-1.jpg",
+            "title": "Nike Air Max Plus white",
+            "button_text": "Buy now",
+            "button_link": "shopify://products/nike-air-max-plus",
+            "aspect_ratio": "1 / 1"
+          }
+        },
+        "banner_qrNQhf": {
+          "type": "banner",
+          "settings": {
+            "image": "shopify://shop_images/Pink-1.jpg",
+            "title": "Nike Air Max Plus Pink",
+            "button_text": "Buy today",
+            "button_link": "shopify://products/nike-air-max-plus",
+            "aspect_ratio": "1 / 1"
+          }
+        },
+        "banner_BN4PPw": {
+          "type": "banner",
+          "settings": {
+            "image": "shopify://shop_images/Black-3.jpg",
+            "title": "Nike Air Max Plus Black",
+            "button_text": "Buy",
+            "button_link": "shopify://products/nike-air-max-plus",
+            "aspect_ratio": "1 / 1"
+          }
+        }
+      },
+      "block_order": [
+        "banner_EKXXdn",
+        "banner_qrNQhf",
+        "banner_BN4PPw"
+      ],
+      "name": "Promo Banners",
+      "settings": {
+        "title": "Promo banners",
+        "subtitle": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </p>",
+        "text_alignment": "center",
+        "padding": 72,
+        "mobile_padding": 32,
+        "color_scheme": "light"
       }
     }
   },
@@ -163,6 +213,7 @@
     "slideshow_6ekC66",
     "image_banner",
     "featured_collection",
-    "banner_product_BFbxap"
+    "banner_product_BFbxap",
+    "promo_banners_iYU9Vm"
   ]
 }
