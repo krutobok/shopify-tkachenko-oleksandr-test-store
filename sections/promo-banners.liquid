@@ -1,60 +1,78 @@
+{{ 'promo-banners.css' | asset_url | stylesheet_tag }}
+
 {%- style -%}
   .section-{{ section.id }}-padding {
-    padding-top: {{ section.settings.padding }}px;
-    padding-bottom: {{ section.settings.padding }}px;
+    padding-top: {{ section.settings.mobile_padding }}px;
+    padding-bottom: {{ section.settings.mobile_padding }}px;
   }
 
   @media screen and (min-width: 750px) {
     .section-{{ section.id }}-padding {
-      padding-top: {{ section.settings.mobile_padding }}px;
-      padding-bottom: {{ section.settings.mobile_padding }}px;
+      padding-top: {{ section.settings.padding }}px;
+      padding-bottom: {{ section.settings.padding }}px;
     }
   }
 {%- endstyle -%}
 
-{%- assign img_w = 600 -%}
+{%- assign img_w = 300 -%}
 
-{% for block in section.blocks %}
-  {% case block.settings.aspect_ratio %}
-    {% when '16 / 9' %}
-      {%- assign img_h = img_w | times: 9 | divided_by: 16 -%}
-    {% when '1 / 1' %}
-      {%- assign img_h = img_w -%}
-    {% when '3 / 2' %}
-      {%- assign img_h = img_w | times: 2 | divided_by: 3 -%}
-    {% else %}
-      {%- assign img_h = img_w | times: 9 | divided_by: 16 -%}
-  {% endcase %}
+<section class="section-{{ section.settings.color_scheme }} section-{{ section.id }}-padding">
+  <div class="container text-{{ section.settings.text_alignment }}">
+    {%- if section.settings.title != blank -%}
+      <h2 class="promo-title">{{- section.settings.title -}}</h2>
+    {%- endif -%}
 
-  <div class="promo-banner" style="aspect-ratio: {{ block.settings.aspect_ratio }};">
-    {% if block.settings.image != blank %}
-      <img
-        src="{{ block.settings.image | image_url: width: img_w, height: img_h }}"
-        width="{{ img_w }}"
-        height="{{ img_h }}"
-        loading="lazy"
-        decoding="async"
-        alt="{{ block.settings.title | escape | default: shop.name }}"
-      >
-    {% else %}
-      <img
-        src="{{ 'placeholder.svg' | asset_url }}"
-        width="{{ img_w }}"
-        height="{{ img_h }}"
-        loading="lazy"
-        decoding="async"
-        alt="Placeholder"
-      >
-    {% endif %}
+    {%- if section.settings.subtitle != blank -%}
+      <div class="promo-subtitle">{{- section.settings.subtitle -}}</div>
+    {%- endif -%}
 
-    <div class="promo-content">
-      <h3>{{ block.settings.title }}</h3>
-      {% if block.settings.button_text != blank and block.settings.button_link != blank %}
-        <a href="{{ block.settings.button_link }}" class="btn">{{ block.settings.button_text }}</a>
-      {% endif %}
+    <div class="promo-grid">
+      {%- for block in section.blocks -%}
+        {%- case block.settings.aspect_ratio -%}
+          {%- when '16 / 9' -%}
+            {%- assign img_h = img_w | times: 9 | divided_by: 16 -%}
+          {%- when '1 / 1' -%}
+            {%- assign img_h = img_w -%}
+          {%- when '3 / 2' -%}
+            {%- assign img_h = img_w | times: 2 | divided_by: 3 -%}
+          {%- else -%}
+            {%- assign img_h = img_w | times: 9 | divided_by: 16 -%}
+        {%- endcase -%}
+
+        <div class="promo-banner">
+          {%- if block.settings.image != blank -%}
+            <img
+              src="{{ block.settings.image | image_url: width: img_w, height: img_h }}"
+              width="{{ img_w }}"
+              height="{{ img_h }}"
+              loading="lazy"
+              decoding="async"
+              alt="{{ block.settings.title | escape | default: shop.name }}"
+              style="aspect-ratio: {{ block.settings.aspect_ratio }}"
+            >
+          {%- else -%}
+            <img
+              src="{{ 'placeholder.svg' | asset_url }}"
+              width="{{ img_w }}"
+              height="{{ img_h }}"
+              loading="lazy"
+              decoding="async"
+              alt="Placeholder"
+              style="aspect-ratio: {{ block.settings.aspect_ratio }}"
+            >
+          {%- endif -%}
+
+          <div class="promo-content">
+            <h3>{{- block.settings.title -}}</h3>
+            {%- if block.settings.button_text and block.settings.button_link -%}
+              <a href="{{ block.settings.button_link }}" class="btn">{{- block.settings.button_text -}}</a>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endfor -%}
     </div>
   </div>
-{% endfor %}
+</section>
 
 {% schema %}
 {
