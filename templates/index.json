@@ -169,7 +169,7 @@
             "title": "Nike Air Max Plus white",
             "button_text": "Buy now",
             "button_link": "shopify://products/nike-air-max-plus",
-            "aspect_ratio": "1 / 1"
+            "aspect_ratio": "16 / 9"
           }
         },
         "banner_qrNQhf": {
@@ -189,7 +189,7 @@
             "title": "Nike Air Max Plus Black",
             "button_text": "Buy",
             "button_link": "shopify://products/nike-air-max-plus",
-            "aspect_ratio": "1 / 1"
+            "aspect_ratio": "3 / 2"
           }
         }
       },
@@ -202,9 +202,9 @@
       "settings": {
         "title": "Promo banners",
         "subtitle": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </p>",
-        "text_alignment": "center",
-        "padding": 72,
-        "mobile_padding": 32,
+        "text_alignment": "right",
+        "padding": 52,
+        "mobile_padding": 52,
         "color_scheme": "light"
       }
     }
