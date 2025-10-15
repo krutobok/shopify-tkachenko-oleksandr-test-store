@@ -140,11 +140,24 @@
         "mobile_padding": 52,
         "color_scheme": "light"
       }
+    },
+    "featured_products_8tq48x": {
+      "type": "featured-products",
+      "name": "Featured products",
+      "settings": {
+        "title": "Featured products",
+        "collection": "featured-products",
+        "products_count": 4,
+        "show_price": true,
+        "show_rating": true,
+        "show_add_to_cart": true
+      }
     }
   },
   "order": [
     "slideshow_6ekC66",
     "banner_product_BFbxap",
-    "promo_banners_iYU9Vm"
+    "promo_banners_iYU9Vm",
+    "featured_products_8tq48x"
   ]
 }
