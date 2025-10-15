@@ -1,0 +1,136 @@
+<section id="featured-products-{{ section.id }}" class="featured-products-section section-{{ section.id }}">
+  <div class="container">
+    {% if section.settings.title != blank %}
+      <h2 class="featured-products__title">{{ section.settings.title }}</h2>
+    {% endif %}
+
+    {% assign collection = collections[section.settings.collection] %}
+    {% if collection != blank %}
+      <div class="featured-products__controls">
+        <label for="sort-{{ section.id }}">Сортувати:</label>
+        <select id="sort-{{ section.id }}" class="featured-products__sort" data-section-id="{{ section.id }}">
+          <option value="best-selling">Найпопулярніші</option>
+          <option value="price-low">Ціна: від дешевших</option>
+          <option value="price-high">Ціна: від дорожчих</option>
+          <option value="title-ascending">Назва: A–Z</option>
+        </select>
+      </div>
+
+      <div class="featured-products__grid">
+        {% assign sorted_products = collection.products | slice: 0, section.settings.products_count %}
+        {% for product in sorted_products %}
+          <div class="featured-product">
+            <a href="{{ product.url }}" class="featured-product__image">
+              {% if product.featured_image %}
+                <img
+                  src="{{ product.featured_image | image_url: width: 400 }}"
+                  width="400"
+                  height="400"
+                  alt="{{ product.title | escape }}"
+                  loading="lazy"
+                >
+              {% endif %}
+            </a>
+
+            <h3 class="featured-product__title">{{ product.title }}</h3>
+
+            {% if section.settings.show_price %}
+              <p class="featured-product__price">{{ product.price | money }}</p>
+            {% endif %}
+
+            {% if section.settings.show_rating %}
+              <div class="featured-product__rating">⭐⭐⭐⭐☆ <span class="rating-text">(4.5/5)</span></div>
+            {% endif %}
+
+            {% if section.settings.show_add_to_cart %}
+              <button
+                class="btn add-to-cart"
+                data-product-id="{{ product.variants.first.id }}"
+                data-section-id="{{ section.id }}"
+              >
+                Додати в кошик
+              </button>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p>Будь ласка, виберіть колекцію в налаштуваннях секції.</p>
+    {% endif %}
+  </div>
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Сортування з Section Rendering API
+    document.querySelectorAll('.featured-products__sort').forEach((select) => {
+      select.addEventListener('change', async (e) => {
+        const sectionId = e.target.dataset.sectionId;
+        const sortBy = e.target.value;
+
+        const url = `${window.location.pathname}?section_id=${sectionId}&sort_by=${sortBy}`;
+        const res = await fetch(url);
+        const text = await res.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(text, 'text/html');
+
+        const newSection = doc.querySelector(`#featured-products-${sectionId}`);
+        const oldSection = document.querySelector(`#featured-products-${sectionId}`);
+        oldSection.innerHTML = newSection.innerHTML;
+      });
+    });
+
+    // Додавання товару в кошик через Fetch API
+    document.addEventListener('click', async (e) => {
+      if (e.target.classList.contains('add-to-cart')) {
+        const variantId = e.target.dataset.productId;
+        const body = JSON.stringify({ items: [{ id: variantId, quantity: 1 }] });
+
+        const res = await fetch('/cart/add.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body,
+        });
+
+        if (res.ok) {
+          alert('✅ Товар додано в кошик!');
+          // Опціонально: оновлення міні-кошика
+          fetch('/?sections=cart-icon-bubble')
+            .then((r) => r.text())
+            .then((html) => {
+              const parser = new DOMParser();
+              const doc = parser.parseFromString(html, 'text/html');
+              const newCart = doc.querySelector('#cart-icon-bubble');
+              const oldCart = document.querySelector('#cart-icon-bubble');
+              if (oldCart && newCart) oldCart.innerHTML = newCart.innerHTML;
+            });
+        } else {
+          alert('❌ Помилка при додаванні в кошик.');
+        }
+      }
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Featured products",
+  "settings": [
+    { "type": "text", "id": "title", "label": "Заголовок" },
+    { "type": "collection", "id": "collection", "label": "Вибір колекції" },
+    {
+      "type": "range",
+      "id": "products_count",
+      "label": "Кількість товарів",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 4
+    },
+    { "type": "checkbox", "id": "show_price", "label": "Показувати ціну", "default": true },
+    { "type": "checkbox", "id": "show_rating", "label": "Показувати рейтинг", "default": false },
+    { "type": "checkbox", "id": "show_add_to_cart", "label": "Кнопка «Додати в кошик»", "default": true }
+  ],
+  "presets": [{ "name": "Featured products" }]
+}
+{% endschema %}
