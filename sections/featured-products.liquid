@@ -1,5 +1,6 @@
 {{ 'featured-products.css' | asset_url | stylesheet_tag }}
 
+{% comment %} {%- render 'cart-drawer' -%} {% endcomment %}
 <section id="featured-products-{{ section.id }}" class="featured-products-section section-{{ section.id }}">
   {%- assign collection_handle = section.settings.collection -%}
   {%- assign collection = collections[collection_handle] -%}
@@ -11,12 +12,14 @@
 
     {% if collection and collection.products_count > 0 %}
       <div class="featured-products__controls">
-        <label for="sort-{{ section.id }}">Сортувати:</label>
-        {%- assign current_sort = request.params.sort_by | default: 'best-selling' -%}
-        <select id="sort-{{ section.id }}" class="featured-products__sort" data-section-id="{{ section.id }}">
+        <label for="sort-by">Сортувати:</label>
+
+        {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
+
+        <select id="sort-by" class="featured-products__sort" data-section-id="{{ section.id }}">
           <option
             value="best-selling"
-            {% if current_sort == 'best-selling' %}
+            {% if sort_by == 'best-selling' %}
               selected
             {% endif %}
           >
@@ -24,7 +27,7 @@
           </option>
           <option
             value="price-ascending"
-            {% if current_sort == 'price-ascending' %}
+            {% if sort_by == 'price-ascending' %}
               selected
             {% endif %}
           >
@@ -32,7 +35,7 @@
           </option>
           <option
             value="price-descending"
-            {% if current_sort == 'price-descending' %}
+            {% if sort_by == 'price-descending' %}
               selected
             {% endif %}
           >
@@ -40,7 +43,7 @@
           </option>
           <option
             value="title-ascending"
-            {% if current_sort == 'title-ascending' %}
+            {% if sort_by == 'title-ascending' %}
               selected
             {% endif %}
           >
@@ -49,21 +52,8 @@
         </select>
       </div>
 
-      {%- assign sort_by = request.params.sort_by | default: 'best-selling' -%}
-
-      {% case sort_by %}
-        {% when 'price-ascending' %}
-          {% assign sorted_products = collection.products | sort: 'price' %}
-        {% when 'price-descending' %}
-          {% assign sorted_products = collection.products | sort: 'price' | reverse %}
-        {% when 'title-ascending' %}
-          {% assign sorted_products = collection.products | sort: 'title' %}
-        {% else %}
-          {% assign sorted_products = collection.products %}
-      {% endcase %}
-
       <div class="featured-products__grid">
-        {% for product in sorted_products limit: section.settings.products_count %}
+        {% for product in collection.products limit: section.settings.products_count %}
           <div class="featured-product">
             <a href="{{ product.url }}" class="featured-product__image">
               {% if product.featured_image %}
@@ -119,61 +109,97 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
-    const sortMap = {
-      'best-selling': 'best-selling',
-      'price-low': 'price-ascending',
-      'price-high': 'price-descending',
-      'title-ascending': 'title-ascending',
+    const sortSelect = document.querySelector('.featured-products__sort');
+    const productGrid = document.querySelector('.featured-products__grid');
+
+    if (!sortSelect || !productGrid) return;
+
+    // Зберігаємо початковий порядок елементів
+    const originalProducts = Array.from(productGrid.querySelectorAll('.featured-product'));
+
+    // Отримуємо поточний список товарів
+    const getProducts = () => Array.from(productGrid.querySelectorAll('.featured-product'));
+
+    // Отримуємо числову ціну з елемента
+    const getPrice = (el) => {
+      const priceEl = el.querySelector('.featured-product__price');
+      if (!priceEl) return 0;
+      const raw = priceEl.textContent.replace(/[^\d.,]/g, '').replace(',', '.');
+      return parseFloat(raw) || 0;
     };
 
-    document.querySelectorAll('.featured-products__sort').forEach((select) => {
-      select.addEventListener('change', async (e) => {
-        const sectionId = e.target.dataset.sectionId;
-        let sortBy = e.target.value;
-        const url = `${window.location.pathname}?section_id=${sectionId}&sort_by=${encodeURIComponent(sortBy)}`;
-        console.log(url);
-        try {
-          const res = await fetch(url);
-          if (!res.ok) throw new Error('Network error');
-          const text = await res.text();
-          const parser = new DOMParser();
-          const doc = parser.parseFromString(text, 'text/html');
-          const newSection = doc.querySelector(`#featured-products-${sectionId}`);
-          const oldSection = document.querySelector(`#featured-products-${sectionId}`);
-          if (newSection && oldSection) {
-            oldSection.innerHTML = newSection.innerHTML;
-          }
-        } catch (error) {
-          console.error('Помилка при оновленні секції:', error);
-        }
-      });
+    // Сортування
+    const sortProducts = (type) => {
+      let products = getProducts();
+
+      switch (type) {
+        case 'price-ascending':
+          products.sort((a, b) => getPrice(a) - getPrice(b));
+          break;
+
+        case 'price-descending':
+          products.sort((a, b) => getPrice(b) - getPrice(a));
+          break;
+
+        case 'title-ascending':
+          products.sort((a, b) => {
+            const nameA = a.querySelector('.featured-product__title').textContent.trim().toLowerCase();
+            const nameB = b.querySelector('.featured-product__title').textContent.trim().toLowerCase();
+            return nameA.localeCompare(nameB);
+          });
+          break;
+
+        case 'best-selling':
+        default:
+          // Повертаємо початковий порядок
+          products = [...originalProducts];
+          break;
+      }
+
+      // Очищаємо грід і вставляємо товари в новому порядку
+      productGrid.innerHTML = '';
+      products.forEach((p) => productGrid.appendChild(p));
+    };
+
+    // Обробник події вибору сортування
+    sortSelect.addEventListener('change', (e) => {
+      sortProducts(e.target.value);
     });
 
     document.addEventListener('click', async (e) => {
       if (e.target.classList.contains('add-to-cart')) {
         e.preventDefault();
         const variantId = e.target.dataset.productId;
-        const body = JSON.stringify({ items: [{ id: variantId, quantity: 1 }] });
+        const data = { items: [{ id: variantId, quantity: 1 }], sections: 'cart-drawer,cart-icon-bubble' };
 
         try {
-          const res = await fetch('/cart/add.js', {
+          const res = await fetch(window.Shopify.routes.root + 'cart/add.js', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body,
+            body: JSON.stringify(data),
           });
 
           if (res.ok) {
-            try {
-              const cartRes = await fetch('/?sections=cart-icon-bubble');
-              const html = await cartRes.text();
-              const parser = new DOMParser();
-              const doc = parser.parseFromString(html, 'text/html');
-              const newCart = doc.querySelector('#cart-icon-bubble');
-              const oldCart = document.querySelector('#cart-icon-bubble');
-              if (oldCart && newCart) oldCart.innerHTML = newCart.innerHTML;
-            } catch (err) {
-              console.warn('Не вдалося оновити міні-кошик', err);
+            const jsonRes = await res.json();
+            console.log(jsonRes);
+
+            const cartDrawer = document.querySelector('cart-drawer');
+
+            const parser = new DOMParser();
+
+            const cartIconBubble = document.getElementById('cart-icon-bubble');
+            const newCartIconBubbleSection = jsonRes.sections['cart-icon-bubble'];
+            const docCartIconBubble = parser.parseFromString(newCartIconBubbleSection, 'text/html');
+            if (docCartIconBubble && cartIconBubble) {
+              cartIconBubble.replaceChildren(...docCartIconBubble.childNodes);
             }
+
+            const newCartDrawerSection = jsonRes.sections['cart-drawer'];
+            const docCartDrawer = parser.parseFromString(newCartDrawerSection, 'text/html');
+            const newCartDrawer = docCartDrawer.querySelector('cart-drawer');
+
+            cartDrawer.innerHTML = newCartDrawer.innerHTML;
+            cartDrawer.open();
           } else {
             console.error('Помилка при додаванні товару', await res.text());
           }
