@@ -114,13 +114,10 @@
 
     if (!sortSelect || !productGrid) return;
 
-    // Зберігаємо початковий порядок елементів
     const originalProducts = Array.from(productGrid.querySelectorAll('.featured-product'));
 
-    // Отримуємо поточний список товарів
     const getProducts = () => Array.from(productGrid.querySelectorAll('.featured-product'));
 
-    // Отримуємо числову ціну з елемента
     const getPrice = (el) => {
       const priceEl = el.querySelector('.featured-product__price');
       if (!priceEl) return 0;
@@ -128,7 +125,6 @@
       return parseFloat(raw) || 0;
     };
 
-    // Сортування
     const sortProducts = (type) => {
       let products = getProducts();
 
@@ -151,17 +147,14 @@
 
         case 'best-selling':
         default:
-          // Повертаємо початковий порядок
           products = [...originalProducts];
           break;
       }
 
-      // Очищаємо грід і вставляємо товари в новому порядку
       productGrid.innerHTML = '';
       products.forEach((p) => productGrid.appendChild(p));
     };
 
-    // Обробник події вибору сортування
     sortSelect.addEventListener('change', (e) => {
       sortProducts(e.target.value);
     });
