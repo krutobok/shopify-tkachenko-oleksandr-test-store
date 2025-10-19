@@ -1,0 +1,228 @@
+{{ 'featured-products.css' | asset_url | stylesheet_tag }}
+
+{% comment %} {%- render 'cart-drawer' -%} {% endcomment %}
+<section id="featured-products-{{ section.id }}" class="featured-products-section section-{{ section.id }}">
+  {%- assign collection_handle = section.settings.collection -%}
+  {%- assign collection = collections[collection_handle] -%}
+
+  <div class="container">
+    {% if section.settings.title != blank %}
+      <h2 class="featured-products__title">{{ section.settings.title }}</h2>
+    {% endif %}
+
+    {% if collection and collection.products_count > 0 %}
+      <div class="featured-products__controls">
+        <label for="sort-by">Сортувати:</label>
+
+        {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
+
+        <select id="sort-by" class="featured-products__sort" data-section-id="{{ section.id }}">
+          <option
+            value="best-selling"
+            {% if sort_by == 'best-selling' %}
+              selected
+            {% endif %}
+          >
+            Найпопулярніші
+          </option>
+          <option
+            value="price-ascending"
+            {% if sort_by == 'price-ascending' %}
+              selected
+            {% endif %}
+          >
+            Ціна: від дешевших
+          </option>
+          <option
+            value="price-descending"
+            {% if sort_by == 'price-descending' %}
+              selected
+            {% endif %}
+          >
+            Ціна: від дорожчих
+          </option>
+          <option
+            value="title-ascending"
+            {% if sort_by == 'title-ascending' %}
+              selected
+            {% endif %}
+          >
+            Назва: A–Z
+          </option>
+        </select>
+      </div>
+
+      <div class="featured-products__grid">
+        {% for product in collection.products limit: section.settings.products_count %}
+          <div class="featured-product">
+            <a href="{{ product.url }}" class="featured-product__image">
+              {% if product.featured_image %}
+                <img
+                  src="{{ product.featured_image | image_url: width: 300, height: 300 }}"
+                  width="300"
+                  height="300"
+                  alt="{{ product.title | escape }}"
+                  loading="lazy"
+                >
+              {% else %}
+                <img
+                  src="{{ 'placeholder.svg' | asset_url }}"
+                  width="300"
+                  height="300"
+                  alt="Placeholder"
+                  loading="lazy"
+                >
+              {% endif %}
+            </a>
+
+            <h3 class="featured-product__title">{{ product.title }}</h3>
+
+            {% if section.settings.show_price %}
+              <p class="featured-product__price">{{ product.price | money }}</p>
+            {% endif %}
+
+            {% if section.settings.show_rating %}
+              {% if product.metafields.reviews.rating.value %}
+                <div class="featured-product__rating">⭐ {{ product.metafields.reviews.rating.value }} / 5</div>
+              {% else %}
+                <div class="featured-product__rating">⭐⭐⭐⭐☆ <span>(4.5/5)</span></div>
+              {% endif %}
+            {% endif %}
+
+            {% if section.settings.show_add_to_cart %}
+              <button
+                class="btn add-to-cart btn-dark"
+                data-product-id="{{ product.variants.first.id }}"
+                data-section-id="{{ section.id }}"
+              >
+                Додати в кошик
+              </button>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p>Будь ласка, виберіть колекцію в налаштуваннях секції або додайте товари.</p>
+    {% endif %}
+  </div>
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const sortSelect = document.querySelector('.featured-products__sort');
+    const productGrid = document.querySelector('.featured-products__grid');
+
+    if (!sortSelect || !productGrid) return;
+
+    const originalProducts = Array.from(productGrid.querySelectorAll('.featured-product'));
+
+    const getProducts = () => Array.from(productGrid.querySelectorAll('.featured-product'));
+
+    const getPrice = (el) => {
+      const priceEl = el.querySelector('.featured-product__price');
+      if (!priceEl) return 0;
+      const raw = priceEl.textContent.replace(/[^\d.,]/g, '').replace(',', '.');
+      return parseFloat(raw) || 0;
+    };
+
+    const sortProducts = (type) => {
+      let products = getProducts();
+
+      switch (type) {
+        case 'price-ascending':
+          products.sort((a, b) => getPrice(a) - getPrice(b));
+          break;
+
+        case 'price-descending':
+          products.sort((a, b) => getPrice(b) - getPrice(a));
+          break;
+
+        case 'title-ascending':
+          products.sort((a, b) => {
+            const nameA = a.querySelector('.featured-product__title').textContent.trim().toLowerCase();
+            const nameB = b.querySelector('.featured-product__title').textContent.trim().toLowerCase();
+            return nameA.localeCompare(nameB);
+          });
+          break;
+
+        case 'best-selling':
+        default:
+          products = [...originalProducts];
+          break;
+      }
+
+      productGrid.innerHTML = '';
+      products.forEach((p) => productGrid.appendChild(p));
+    };
+
+    sortSelect.addEventListener('change', (e) => {
+      sortProducts(e.target.value);
+    });
+
+    document.addEventListener('click', async (e) => {
+      if (e.target.classList.contains('add-to-cart')) {
+        e.preventDefault();
+        const variantId = e.target.dataset.productId;
+        const data = { items: [{ id: variantId, quantity: 1 }], sections: 'cart-drawer,cart-icon-bubble' };
+
+        try {
+          const res = await fetch(window.Shopify.routes.root + 'cart/add.js', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+          });
+
+          if (res.ok) {
+            const jsonRes = await res.json();
+            console.log(jsonRes);
+
+            const cartDrawer = document.querySelector('cart-drawer');
+
+            const parser = new DOMParser();
+
+            const cartIconBubble = document.getElementById('cart-icon-bubble');
+            const newCartIconBubbleSection = jsonRes.sections['cart-icon-bubble'];
+            const docCartIconBubble = parser.parseFromString(newCartIconBubbleSection, 'text/html');
+            if (docCartIconBubble && cartIconBubble) {
+              cartIconBubble.replaceChildren(...docCartIconBubble.childNodes);
+            }
+
+            const newCartDrawerSection = jsonRes.sections['cart-drawer'];
+            const docCartDrawer = parser.parseFromString(newCartDrawerSection, 'text/html');
+            const newCartDrawer = docCartDrawer.querySelector('cart-drawer');
+
+            cartDrawer.innerHTML = newCartDrawer.innerHTML;
+            cartDrawer.open();
+          } else {
+            console.error('Помилка при додаванні товару', await res.text());
+          }
+        } catch (error) {
+          console.error('Fetch error:', error);
+        }
+      }
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Featured products",
+  "settings": [
+    { "type": "text", "id": "title", "label": "Заголовок" },
+    { "type": "collection", "id": "collection", "label": "Вибір колекції" },
+    {
+      "type": "range",
+      "id": "products_count",
+      "label": "Кількість товарів",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 4
+    },
+    { "type": "checkbox", "id": "show_price", "label": "Показувати ціну", "default": true },
+    { "type": "checkbox", "id": "show_rating", "label": "Показувати рейтинг", "default": false },
+    { "type": "checkbox", "id": "show_add_to_cart", "label": "Кнопка «Додати в кошик»", "default": true }
+  ],
+  "presets": [{ "name": "Featured products" }]
+}
+{% endschema %}
