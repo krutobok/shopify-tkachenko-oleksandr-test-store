@@ -48,5 +48,5 @@
   [https://github.com/krutobok/shopify-tkachenko-oleksandr-test-store/tree/metaobjects-and-metafields](https://github.com/krutobok/shopify-tkachenko-oleksandr-test-store/tree/metaobjects-and-metafields)
 
 - **Стор Shopify:**  
-  [https://tkachenko-oleksandr-test-store.myshopify.com/?preview_theme_id=182997680437](https://tkachenko-oleksandr-test-store.myshopify.com/?preview_theme_id=182997680437)  
+  [https://tkachenko-oleksandr-test-store.myshopify.com/?preview_theme_id=183172563253](https://tkachenko-oleksandr-test-store.myshopify.com/?preview_theme_id=183172563253)  
   🔑 Пароль: `nowvol`
