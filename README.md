@@ -1,87 +1,52 @@
-# 🛍️ Shopify — Promo Banners & Featured Products
+# 🧩 Shopify — Metaobjects & Designers Section
 
 ## 📋 Опис завдання
 
-Мета — створити дві кастомні секції з різними типами налаштувань і динамічними блоками для теми **Dawn**:
+Мета — реалізувати секцію з відображенням дизайнерів на основі **Metaobject** і **Metafield** у темі **Dawn**.
 
-1. **Promo Banners (`promo-banners.liquid`)**  
-   Секція з банерами, які можна додавати через редактор, налаштовуючи зображення, текст і кнопку.  
+**Завдання:**
 
-2. **Featured Products (`featured-products.liquid`)**  
-   Секція для відображення обраних товарів із можливістю сортування та додавання в кошик.
+- Створити `Metaobject` **Designer** з необхідними полями.
+- Створити 3–4 екземпляри дизайнерів.
+- Додати метаполе `Designers` до колекцій (тип: Metaobject list → Designer).
+- Створити секцію `designers.liquid` для відображення карток дизайнерів.
 
+---
 
 ## ✅ Виконана робота
 
-### 🔹 Секція `promo-banners.liquid`
+- Створено **metaobject Designer** із полями:
+  - name, role, bio, photo, tags, portfolio_links, birth_date, verified.
+- Створено **4 дизайнерів**.
+- Створено **метаполе для колекцій** — `Designer`, що зберігає кілька записів типу `Designer`.
+- Реалізовано секцію `designers.liquid`, яка:
+  - Підтягує дизайнерів з метаполя колекції.
+  - Виводить їх фото, ім’я, роль, біографію, теги, посилання, дату народження та статус “Verified Designer”.
+- Додано адаптивну сітку на **CSS Grid** (1–3 колонки).
+- Фото взяті з **Unsplash**.
 
-- Реалізовано всі вимоги до налаштувань секції:
-  - Заголовок (text)
-  - Підзаголовок (richtext)
-  - Вирівнювання тексту (select: left, center, right)
-  - Відступи секції (range: 0–100px)
-  - Кольорова схема (select: світла, темна, акцентна)
-- Додано підтримку блоків **banner**:
-  - Зображення (image_picker)
-  - Заголовок (text)
-  - Текст кнопки (text)
-  - Посилання (url)
-  - Співвідношення сторін (select: 16:9, 1:1, 3:2)
-- Адаптивна сітка:  
-   1 колонка — мобільні  
-   2 колонки — планшети  
-   3 колонки — десктопи  
-- Реалізовано fallback для зображень і alt-атрибутів.
-- Стилі підключено через унікальний `section.id`.
+---
 
+## 🔧 Технології
 
-### 🔹 Секція `featured-products.liquid`
+- **Shopify Liquid:** assign, for, if/else, metafields, metaobject.values, image_url.
+- **Metaobjects & Metafields** — структура даних для колекцій.
+- **CSS Grid** — адаптивне відображення карток.
 
-- Налаштування секції:
-  - Заголовок (text)
-  - Вибір колекції (collection)
-  - Кількість товарів (range: 2–12)
-  - Показувати ціну / рейтинг / кнопку «Додати в кошик» (checkbox)
-- Реалізовано **JS-сортування товарів** за такими параметрами:
-  - 🔹 `best-selling` — початковий порядок
-  - 🔹 `price-ascending` — від дешевших
-  - 🔹 `price-descending` — від дорожчих
-  - 🔹 `title-ascending` — A–Z
-- При натисканні «Додати в кошик»:
-  - Використовується **Fetch API** для додавання товару.
-  - Оновлюється **cart icon bubble** через Section Rendering API.
-  - Викликається стандартний **cart drawer** із теми Dawn.
-
-
-## 🔧 Технології та підходи
-
-- **Shopify Liquid**:  
-  `assign`, `case`, `for`, `if/else`, `image_url`, `escape`, `default`
-- **JSON schema** для опису налаштувань секцій та блоків
-- **JavaScript**:
-  - `fetch()` для роботи з Shopify cart API
-  - Сортування колекції клієнтським методом
-  - Динамічне оновлення DOM і cart drawer
-- **Cart API** — для оновлення міні-кошика
-- **CSS Grid** — для адаптивної верстки
-
+---
 
 ## 📝 Примітки
 
-- Сортування реалізовано через **звичайний JS**, оскільки секція використовується на **головній сторінці**, а не на сторінці колекції (де доступне server-side сортування).  
-- **Cart drawer** працює частково:
-  - ✅ Якщо в кошику вже є товари — працює повністю коректно.
-  - ⚠️ Якщо додається **перший товар** — дровер відкривається, але не завжди оновлює контент належним чином.
-- Скріншоти секцій розьашовані в цій гілці в папці screenshots
+- Основний фокус на роботі з метаданими, не на візуалі.
+- Скріншоти розташовані у папці screenshots в цій гілці.
 
+---
 
-## 🔗 Пов’язані ресурси
+## 🔗 Ресурси
 
-- 🧩 **GitHub репозиторій (branch: `custom-section`)**  
-  [https://github.com/krutobok/shopify-tkachenko-oleksandr-test-store/tree/custom-section](https://github.com/krutobok/shopify-tkachenko-oleksandr-test-store/tree/custom-section)
+- **GitHub (branch: `metaobjects-and-metafields`)**  
+  [https://github.com/krutobok/shopify-tkachenko-oleksandr-test-store/tree/metaobjects-and-metafields](https://github.com/krutobok/shopify-tkachenko-oleksandr-test-store/tree/metaobjects-and-metafields)
 
-- 🛒 **Тестовий стор:**  
-  [ https://tkachenko-oleksandr-test-store.myshopify.com/?preview_theme_id=182997680437](https://tkachenko-oleksandr-test-store.myshopify.com/?preview_theme_id=182997680437)  
+- **Стор Shopify:**  
+  [https://tkachenko-oleksandr-test-store.myshopify.com/?preview_theme_id=182997680437](https://tkachenko-oleksandr-test-store.myshopify.com/?preview_theme_id=182997680437)  
   🔑 Пароль: `nowvol`
-
-
