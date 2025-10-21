@@ -190,6 +190,7 @@
             const docCartDrawer = parser.parseFromString(newCartDrawerSection, 'text/html');
             const newCartDrawer = docCartDrawer.querySelector('cart-drawer');
 
+            cartDrawer.classList.remove('is-empty');
             cartDrawer.innerHTML = newCartDrawer.innerHTML;
             cartDrawer.open();
           } else {
