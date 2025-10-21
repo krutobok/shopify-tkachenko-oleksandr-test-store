@@ -1,0 +1,111 @@
+<section class="designers">
+  <div class="container">
+    {% if section.settings.title != blank %}
+      <h2 class="designers__title">{{ section.settings.title }}</h2>
+    {% endif %}
+
+    {%- assign featured_collection = collections[section.settings.featured_collection] -%}
+
+    {% comment %}
+      1. Отримуємо наш рядок: ["gid...", "gid..."]
+    {% endcomment %}
+    {%- assign designer_string = featured_collection.metafields.custom.designer -%}
+
+    {% if designer_string != blank %}
+      {% comment %}
+        2. Видаляємо квадратні дужки [ та ].
+      {% endcomment %}
+      {%- assign cleaned_string = designer_string | remove: '[' | remove: ']' -%}
+
+      {% comment %}
+        3. Розбиваємо рядок на масив по комі.
+      {% endcomment %}
+      {%- assign gids_array = cleaned_string | split: ',' -%}
+
+      <div class="designers__grid">
+        {% comment %}
+          4. Ітеруємо по цьому новому масиву.
+        {% endcomment %}
+        {% for gid_item in gids_array %}
+          {% comment %}
+            5. Очищуємо кожен GID:
+               - 'strip' видаляє зайві пробіли на початку/кінці.
+               - 'remove: '"'' видаляє лапки.
+          {% endcomment %}
+          {%- assign gid = gid_item | strip | remove: '"' -%}
+
+          {% comment %}
+            6. Переконуємось, що GID не порожній, і дістаємо об'єкт.
+          {% endcomment %}
+          {% if gid != blank %}
+            {%- assign designer = shop.metaobjects[gid] -%}
+
+            {% comment %} Перевіряємо, чи об'єкт справді існує {% endcomment %}
+            {% if designer != null %}
+              <div class="designer-card">
+                {% comment %}
+                  Тепер ми працюємо з 'designer' як з об'єктом,
+                  тому .value знову потрібне для полів всередині нього.
+                {% endcomment %}
+                {% if designer.photo.value != blank %}
+                  <img
+                    src="{{ designer.photo.value | image_url: width: 300 }}"
+                    alt="{{ designer.photo.value.alt | default: designer.name | escape }}"
+                    class="designer-photo"
+                    loading="lazy"
+                    width="300"
+                    height="{{ 300 | divided_by: designer.photo.value.aspect_ratio | round }}"
+                  >
+                {% endif %}
+
+                <h3 class="designer-name">{{ designer.name }}</h3>
+                <p class="designer-role">{{ designer.role }}</p>
+                <p class="designer-bio">{{ designer.bio }}</p>
+
+                <div class="designer-tags">
+                  {% for tag in designer.tags.value %}
+                    <span class="tag">{{ tag }}</span>
+                  {% endfor %}
+                </div>
+
+                <div class="designer-links">
+                  {% for link in designer.portfolio_links.value %}
+                    <a href="{{ link }}" target="_blank">{{ link }}</a>
+                  {% endfor %}
+                </div>
+
+                <p class="designer-date">Born: {{ designer.birth_date | date: '%B %d, %Y' }}</p>
+
+                {% if designer.verified %}
+                  <span class="verified">✅ Verified Designer</span>
+                {% endif %}
+              </div>
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% else %}
+      <p>Please select a collection in the theme editor, or add designers to the selected collection.</p>
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Designers Section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Заголовок секції",
+      "default": "Our Designers"
+    },
+    {
+      "type": "collection",
+      "id": "featured_collection",
+      "label": "Виберіть колекцію дизайнерів"
+    }
+  ],
+  "presets": [{ "name": "Designers" }]
+}
+{% endschema %}
