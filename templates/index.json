@@ -152,12 +152,21 @@
         "show_rating": true,
         "show_add_to_cart": true
       }
+    },
+    "designers_gXz9LC": {
+      "type": "designers",
+      "name": "Designers",
+      "settings": {
+        "title": "Our Designers",
+        "featured_collection": "featured-products"
+      }
     }
   },
   "order": [
     "slideshow_6ekC66",
     "banner_product_BFbxap",
     "promo_banners_iYU9Vm",
-    "featured_products_8tq48x"
+    "featured_products_8tq48x",
+    "designers_gXz9LC"
   ]
 }
