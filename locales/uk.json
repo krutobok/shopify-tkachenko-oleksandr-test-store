@@ -5,5 +5,32 @@
       "available_with_count": "Доступно: {{ count }}",
       "select_color": "Оберіть колір"
     }
+  },
+  "contact": {
+    "form": {
+      "name": "Ім’я",
+      "email": "Електронна пошта",
+      "phone": "Телефон",
+      "message": "Повідомлення",
+      "submit": "Надіслати",
+      "success": "Ваше повідомлення успішно надіслано!",
+      "error": "Сталася помилка. Спробуйте ще раз."
+    }
+  },
+  "products_form": {
+    "product": {
+      "quantity": {
+        "label": "Кількість"
+      },
+      "properties": {
+        "reason": "Причина запиту (необов'язково)",
+        "contact_method": "Бажаний спосіб зв'язку",
+        "email": "Email",
+        "phone": "Телефон"
+      },
+      "add_to_cart": "Додати в кошик",
+      "sold_out": "Продано",
+      "variant_unavailable": "Цей варіант наразі недоступний"
+    }
   }
 }

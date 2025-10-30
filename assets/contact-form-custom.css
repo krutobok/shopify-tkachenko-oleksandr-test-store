@@ -1,0 +1,123 @@
+.contact-form-custom {
+  color: #111111;
+  padding: 50px 0;
+}
+
+.contact-form__title {
+  font-size: 3.5rem;
+  color: #111111;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.field label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #555;
+}
+
+.field input[type="text"],
+.field input[type="email"],
+.field input[type="tel"],
+.field textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-family: inherit;
+  font-size: 1rem;
+  box-sizing: border-box;
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.field input:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.25);
+}
+
+.field textarea {
+  min-height: 150px;
+  resize: vertical;
+}
+
+.contact-form .btn {
+  width: 100%;
+  padding: 14px 20px;
+  background-color: #007bff;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  font-size: 1.4rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: center;
+  transition:
+    background-color 0.3s ease,
+    transform 0.2s ease;
+}
+
+.contact-form .btn:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px);
+}
+
+.field-error {
+  color: #d93a4f;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-top: 8px;
+}
+
+.field input[aria-invalid="true"],
+.field textarea[aria-invalid="true"] {
+  border-color: #d93a4f;
+  background-color: #fffafa;
+  box-shadow: 0 0 5px rgba(217, 58, 79, 0.2);
+}
+
+.field input[aria-invalid="true"]:focus,
+.field textarea[aria-invalid="true"]:focus {
+  border-color: #d93a4f;
+  box-shadow: 0 0 5px rgba(217, 58, 79, 0.25);
+}
+
+.form-success {
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  text-align: center;
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.contact-form .btn:disabled {
+  background-color: #aaa;
+  color: #f1f1f1;
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.contact-form .btn:disabled:hover {
+  background-color: #aaa;
+  transform: none;
+}
