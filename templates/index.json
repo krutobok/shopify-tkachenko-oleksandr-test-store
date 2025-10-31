@@ -160,6 +160,13 @@
         "title": "Our Designers",
         "featured_collection": "featured-products"
       }
+    },
+    "contact_form_custom_qepYPW": {
+      "type": "contact-form-custom",
+      "name": "Contact Form Custom",
+      "settings": {
+        "title": "Contact Us"
+      }
     }
   },
   "order": [
@@ -167,6 +174,7 @@
     "banner_product_BFbxap",
     "promo_banners_iYU9Vm",
     "featured_products_8tq48x",
-    "designers_gXz9LC"
+    "designers_gXz9LC",
+    "contact_form_custom_qepYPW"
   ]
 }
