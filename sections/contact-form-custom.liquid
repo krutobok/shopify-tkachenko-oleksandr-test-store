@@ -11,9 +11,10 @@
         <p class="form-success" role="status" aria-live="polite" tabindex="-1" autofocus>
           {{ 'contact.form.success' | t }}
         </p>
+      {% elsif form.errors %}
+        {{ form.errors | default_errors }}
       {% endif %}
 
-      {{ form.errors | default_errors }}
       <input
         type="text"
         name="contact[trap]"
