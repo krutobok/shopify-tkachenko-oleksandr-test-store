@@ -1,0 +1,135 @@
+{{ 'contact-form-custom.css' | asset_url | stylesheet_tag }}
+
+<section class="contact-form-custom">
+  <div class="container">
+    {% if section.settings.title != blank %}
+      <h2 class="contact-form__title">{{ section.settings.title }}</h2>
+    {% endif %}
+
+    {% form 'contact', id: 'custom-contact-form', class: 'contact-form', novalidate: 'novalidate' %}
+      {% if form.posted_successfully? %}
+        <p class="form-success" role="status" aria-live="polite" tabindex="-1" autofocus>
+          {{ 'contact.form.success' | t }}
+        </p>
+      {% elsif form.errors %}
+        {{ form.errors | default_errors }}
+      {% endif %}
+
+      <input
+        type="text"
+        name="contact[trap]"
+        tabindex="-1"
+        autocomplete="off"
+        class="visually-hidden"
+        aria-hidden="true"
+      >
+
+      <div class="field">
+        <label for="ContactFormName">{{ 'contact.form.name' | t }}</label>
+        <input
+          id="ContactFormName"
+          type="text"
+          name="contact[name]"
+          value="{{ form.name }}"
+          autocomplete="name"
+          aria-required="false"
+          {% if form.errors.messages.name %}
+            aria-invalid="true"
+            aria-describedby="ContactFormName-error"
+          {% endif %}
+        >
+        {% if form.errors.messages.name %}
+          <div id="ContactFormName-error" class="field-error" role="alert">
+            {{ form.errors.messages.name }}
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="field">
+        <label for="ContactFormEmail">{{ 'contact.form.email' | t }} *</label>
+        <input
+          id="ContactFormEmail"
+          type="email"
+          name="contact[email]"
+          value="{{ form.email }}"
+          required
+          autocomplete="email"
+          aria-required="true"
+          {% if form.errors.messages.email %}
+            aria-invalid="true"
+            aria-describedby="ContactFormEmail-error"
+          {% endif %}
+        >
+        {% if form.errors.messages.email %}
+          <div id="ContactFormEmail-error" class="field-error" role="alert">
+            {{ form.errors.messages.email }}
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="field">
+        <label for="ContactFormPhone">{{ 'contact.form.phone' | t }}</label>
+        <input
+          id="ContactFormPhone"
+          type="tel"
+          name="contact[phone]"
+          value="{{ form.phone }}"
+          autocomplete="tel"
+          {% if form.errors.messages.phone %}
+            aria-invalid="true"
+            aria-describedby="ContactFormPhone-error"
+          {% endif %}
+        >
+        {% if form.errors.messages.phone %}
+          <div id="ContactFormPhone-error" class="field-error" role="alert">
+            {{ form.errors.messages.phone }}
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="field">
+        <label for="ContactFormMessage">{{ 'contact.form.message' | t }} *</label>
+        <textarea
+          id="ContactFormMessage"
+          name="contact[body]"
+          rows="5"
+          required
+          aria-required="true"
+          {% if form.errors.messages.body %}
+            aria-invalid="true"
+            aria-describedby="ContactFormMessage-error"
+          {% endif %}
+        >{{ form.body }}</textarea>
+        {% if form.errors.messages.body %}
+          <div id="ContactFormMessage-error" class="field-error" role="alert">
+            {{ form.errors.messages.body }}
+          </div>
+        {% endif %}
+      </div>
+
+      <button type="submit" class="btn" id="contact-submit">{{ 'contact.form.submit' | t }}</button>
+    {% endform %}
+  </div>
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const contactForm = document.getElementById('custom-contact-form');
+    const submitButton = document.getElementById('contact-submit');
+
+    if (contactForm && submitButton) {
+      contactForm.addEventListener('submit', function () {
+        submitButton.disabled = true;
+        contactForm.setAttribute('aria-busy', 'true');
+      });
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Contact Form (Custom)",
+  "settings": [{ "type": "text", "id": "title", "label": "Заголовок", "default": "Contact Us" }],
+  "presets": [{ "name": "Contact Form Custom" }]
+}
+{% endschema %}

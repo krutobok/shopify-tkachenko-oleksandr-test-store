@@ -1,0 +1,125 @@
+{% liquid
+  assign current_variant = product.selected_or_first_available_variant
+%}
+
+{{ 'product-form-custom.css' | asset_url | stylesheet_tag }}
+
+<section class="product-form-custom">
+  <div class="container">
+    <h2 class="product-form__title">{{ product.title }}</h2>
+
+    {% form 'product',
+      product,
+      id: 'custom-product-form-{{ section.id }}',
+      class: 'product-form',
+      novalidate: 'novalidate'
+    %}
+      {{ form.errors | default_errors }}
+      <input
+        type="text"
+        name="contact[trap]"
+        tabindex="-1"
+        autocomplete="off"
+        class="visually-hidden"
+        aria-hidden="true"
+      >
+
+      <input
+        type="hidden"
+        name="id"
+        value="{{ current_variant.id }}"
+      >
+
+      <div class="field">
+        <label for="Quantity-{{ section.id }}">{{ 'products_form.product.quantity.label' | t }}</label>
+        <input
+          id="Quantity-{{ section.id }}"
+          type="number"
+          name="quantity"
+          value="1"
+          min="1"
+          class="quantity-input"
+          {% if form.errors.messages.quantity %}
+            aria-invalid="true"
+            aria-describedby="Quantity-{{ section.id }}-error"
+          {% endif %}
+        >
+        {% if form.errors.messages.quantity %}
+          <div id="Quantity-{{ section.id }}-error" class="field-error" role="alert">
+            {{ form.errors.messages.quantity }}
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="field">
+        <label for="PropReason-{{ section.id }}">
+          {{ 'products_form.product.properties.reason' | t }}
+        </label>
+        <input
+          id="PropReason-{{ section.id }}"
+          type="text"
+          name="properties[Reason]"
+        >
+      </div>
+
+      <div class="field">
+        <label for="PropContact-{{ section.id }}">
+          {{ 'products_form.product.properties.contact_method' | t }}
+        </label>
+        <select id="PropContact-{{ section.id }}" name="properties[Preferred contact]">
+          <option value="{{ 'products_form.product.properties.email' | t }}">
+            {{ 'products_form.product.properties.email' | t }}
+          </option>
+          <option value="{{ 'products_form.product.properties.phone' | t }}">
+            {{ 'products_form.product.properties.phone' | t }}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-submit-wrapper">
+        <p class="variant-availability" role="status">
+          {% if current_variant.available == false %}
+            <span class="unavailable">{{ 'products_form.product.variant_unavailable' | t }}</span>
+          {% endif %}
+        </p>
+
+        <button
+          type="submit"
+          class="btn"
+          id="product-submit-{{ section.id }}"
+          {% if current_variant.available == false %}
+            disabled
+          {% endif %}
+        >
+          {% if current_variant.available %}
+            {{ 'products_form.product.add_to_cart' | t }}
+          {% else %}
+            {{ 'products_form.product.sold_out' | t }}
+          {% endif %}
+        </button>
+      </div>
+    {% endform %}
+  </div>
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const productForm = document.getElementById('custom-product-form-{{ section.id }}');
+    const submitButton = document.getElementById('product-submit-{{ section.id }}');
+
+    if (productForm && submitButton) {
+      productForm.addEventListener('submit', function () {
+        submitButton.disabled = true;
+        productForm.setAttribute('aria-busy', 'true');
+      });
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Product Form (Custom)",
+  "settings": [{ "type": "text", "id": "title", "label": "Заголовок", "default": "Product Form Custom" }],
+  "presets": [{ "name": "Product Form Custom" }]
+}
+{% endschema %}

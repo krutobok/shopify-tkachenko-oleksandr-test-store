@@ -1,52 +1,68 @@
-# 🧩 Shopify — Metaobjects & Designers Section
+# 🧩 Shopify — Custom Forms (Contact & Product Inquiry)
 
 ## 📋 Опис завдання
 
-Мета — реалізувати секцію з відображенням дизайнерів на основі **Metaobject** і **Metafield** у темі **Dawn**.
+Мета — створити дві кастомні секції з формами для теми **Dawn**, використовуючи можливості Shopify Forms API.
 
 **Завдання:**
-
-- Створити `Metaobject` **Designer** з необхідними полями.
-- Створити 3–4 екземпляри дизайнерів.
-- Додати метаполе `Designers` до колекцій (тип: Metaobject list → Designer).
-- Створити секцію `designers.liquid` для відображення карток дизайнерів.
+1. Реалізувати секцію **Contact Form** із полями:
+   - Name  
+   - Email (required)  
+   - Phone  
+   - Message (required)  
+   - Honeypot (антиспам)
+2. Реалізувати секцію **Product Inquiry / Add to cart Form**:
+   - На базі `{% form 'product', product %}`
+   - З кастомними властивостями `properties[...]`
+   - Валідацією кількості
+   - Обробкою недоступних варіантів
 
 ---
 
 ## ✅ Виконана робота
 
-- Створено **metaobject Designer** із полями:
-  - name, role, bio, photo, tags, portfolio_links, birth_date, verified.
-- Створено **4 дизайнерів**.
-- Створено **метаполе для колекцій** — `Designer`, що зберігає кілька записів типу `Designer`.
-- Реалізовано секцію `designers.liquid`, яка:
-  - Підтягує дизайнерів з метаполя колекції.
-  - Виводить їх фото, ім’я, роль, біографію, теги, посилання, дату народження та статус “Verified Designer”.
-- Додано адаптивну сітку на **CSS Grid** (1–3 колонки).
-- Фото взяті з **Unsplash**.
+### 🔹 Секція `contact-form-custom.liquid`
+- Створено форму з правильними атрибутами:
+  - `type="email"`, `required`, `autocomplete`, `aria-invalid`, `aria-describedby`
+- Додано **honeypot-поле** для запобігання спаму.
+- Реалізовано відображення помилок і повідомлення про успіх через `role="status"` і `aria-live="polite"`.
+- Підтримується валідація з боку Shopify.
+- Усі тексти виведені через переклади (`| t`).
+
+### 🔹 Секція `product-inquiry-form.liquid`
+- Створено форму на базі `{% form 'product', product %}`.
+- Передається правильний `variant.id` для додавання в кошик.
+- Додано кастомні поля:
+  - `properties[Reason]` — текстове поле;
+  - `properties[Preferred contact]` — select.
+- Реалізовано базову валідацію кількості (`min="1"`) і повідомлення при недоступному варіанті.
 
 ---
 
 ## 🔧 Технології
 
-- **Shopify Liquid:** assign, for, if/else, metafields, metaobject.values, image_url.
-- **Metaobjects & Metafields** — структура даних для колекцій.
-- **CSS Grid** — адаптивне відображення карток.
+- **Shopify Liquid:**  
+  `form`, `form.errors`, `default_errors`, `t`, `aria-*`, `for`, `if/else`
+- **Accessibility (a11y):**  
+  `aria-live`, `aria-invalid`, `aria-describedby`, `role="status"`
+- **Honeypot-антиспам:** приховане поле `contact[trap]`
+- **Localization:** усі тексти через `| t`, без хардкоду
 
 ---
 
 ## 📝 Примітки
 
-- Основний фокус на роботі з метаданими, не на візуалі.
-- Скріншоти розташовані у папці screenshots в цій гілці.
+- Базова логіка відправки форм працює через стандартну Shopify систему.  
+- AJAX-відправка не реалізована.
 
 ---
 
 ## 🔗 Ресурси
 
-- **GitHub (branch: `metaobjects-and-metafields`)**  
-  [https://github.com/krutobok/shopify-tkachenko-oleksandr-test-store/tree/metaobjects-and-metafields](https://github.com/krutobok/shopify-tkachenko-oleksandr-test-store/tree/metaobjects-and-metafields)
+- **GitHub (branch: `shopify-forms`)**  
+  [https://github.com/krutobok/shopify-tkachenko-oleksandr-test-store/tree/shopify-forms](https://github.com/krutobok/shopify-tkachenko-oleksandr-test-store/tree/forms)
 
 - **Стор Shopify:**  
-  [https://tkachenko-oleksandr-test-store.myshopify.com/?preview_theme_id=183172563253](https://tkachenko-oleksandr-test-store.myshopify.com/?preview_theme_id=183172563253)  
+  [https://tkachenko-oleksandr-test-store.myshopify.com/?preview_theme_id=183432380725](https://tkachenko-oleksandr-test-store.myshopify.com/?preview_theme_id=183432380725)  
   🔑 Пароль: `nowvol`
+

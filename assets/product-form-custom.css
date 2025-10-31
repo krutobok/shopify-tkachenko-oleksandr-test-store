@@ -1,0 +1,135 @@
+.product-form-custom {
+  padding: 50px 0;
+  color: #111111;
+}
+
+.product-form-custom .container {
+  max-width: 750px;
+  color: #111111;
+  padding: 0 10px;
+  margin: 0 auto;
+}
+.product-form__title {
+  font-size: 2rem;
+  color: #111111;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.product-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.field label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #555;
+}
+
+.field input[type="text"],
+.field input[type="number"],
+.field select,
+.field textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-family: inherit;
+  font-size: 1rem;
+  box-sizing: border-box;
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+  appearance: none;
+  background-color: white;
+}
+
+.quantity-input {
+  max-width: 120px;
+}
+
+.field select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23333'%3E%3Cpath d='M8 11.207L1.646 4.854 2.354 4.146 8 9.793l5.646-5.647L14.354 4.854 8 11.207z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 1em;
+  padding-right: 30px;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.25);
+}
+
+.product-form .btn {
+  width: 100%;
+  padding: 14px 20px;
+  background-color: #28a745;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background-color 0.3s ease,
+    transform 0.2s ease;
+}
+
+.product-form .btn:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+}
+
+.product-form .btn:disabled {
+  background-color: #aaa;
+  color: #f1f1f1;
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.product-form .btn:disabled:hover {
+  background-color: #aaa;
+}
+
+.variant-availability {
+  min-height: 1.2em;
+  margin-bottom: 10px;
+  text-align: center;
+  font-weight: 600;
+}
+.variant-availability .unavailable {
+  color: #d93a4f;
+}
+
+.field-error {
+  color: #d93a4f;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-top: 8px;
+}
+
+.field input[aria-invalid="true"] {
+  border-color: #d93a4f;
+  background-color: #fffafa;
+  box-shadow: 0 0 5px rgba(217, 58, 79, 0.2);
+}
+
+.field input[aria-invalid="true"]:focus {
+  border-color: #d93a4f;
+  box-shadow: 0 0 5px rgba(217, 58, 79, 0.25);
+}
