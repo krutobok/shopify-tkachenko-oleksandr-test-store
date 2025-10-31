@@ -8,7 +8,12 @@
   <div class="container">
     <h2 class="product-form__title">{{ product.title }}</h2>
 
-    {% form 'product', product, id: 'custom-product-form', class: 'product-form', novalidate: 'novalidate' %}
+    {% form 'product',
+      product,
+      id: 'custom-product-form-{{ section.id }}',
+      class: 'product-form',
+      novalidate: 'novalidate'
+    %}
       {{ form.errors | default_errors }}
       <input
         type="text"
