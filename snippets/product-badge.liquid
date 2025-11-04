@@ -1,13 +1,13 @@
-<div class="product__badge">
+<div class="absolute flex gap-1.5 left-6 top-6 rounded-lg bg-primary-bg p-3">
   {% assign vendor_down = product.vendor | downcase %}
   {% case vendor_down %}
     {% when 'nike' %}
-      <span class="badge badge--nike">🔥 Top Seller</span>
+      <span class="text-primary">🔥 Top Seller</span>
     {% when 'adidas' %}
-      <span class="badge badge--adidas">⭐ Premium</span>
+      <span class="text-primary">⭐ Premium</span>
     {% when 'puma' %}
-      <span class="badge badge--puma">💎 Exclusive</span>
+      <span class="text-primary">💎 Exclusive</span>
     {% else %}
-      <span class="badge badge--default">🆕 New</span>
+      <span class="text-primary">🆕 New</span>
   {% endcase %}
 </div>

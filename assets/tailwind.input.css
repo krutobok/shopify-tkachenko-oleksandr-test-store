@@ -1,1 +1,39 @@
 @import "tailwindcss";
+
+@theme {
+  --color-primary: #111111;
+  --color-primary-bg: #ffffff;
+  --color-secondary: #737373;
+  --color-border: #ebebeb;
+
+  --spacing-container-padding: 24px;
+  --breakpoint-container: 1320px;
+
+  --font-size-title: 48px;
+  --font-size-title-small: 30px;
+  --font-size-large: 16px;
+  --font-size-medium: 14px;
+
+  --line-height-title: 100%;
+  --line-height-title-small: 36px;
+  --line-height-large: 24px;
+  --line-height-medium: 20px;
+
+  --spacing-thumb: 88px;
+  --max-width-main: 536px;
+  --max-width-info: 612px;
+  --spacing-thumb: 88px;
+  --spacing-main-image: 536px;
+  --spacing-product-info: 612px;
+}
+
+@layer components {
+  .custom-container {
+    max-width: var(--breakpoint-container);
+    padding-inline: var(--spacing-container-padding);
+
+    margin-inline: auto;
+
+    width: 100%;
+  }
+}

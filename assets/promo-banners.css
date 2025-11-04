@@ -7,7 +7,12 @@
 .text-right {
   text-align: right;
 }
-
+.container {
+  max-width: var(--container-size);
+  padding: 0 var(--container-padding);
+  margin: 0 auto;
+  width: 100%;
+}
 .promo-grid {
   display: grid;
   grid-template-columns: 1fr;
