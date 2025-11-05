@@ -28,7 +28,7 @@
           {% for variant in current_product.variants %}
             {% assign color_value = variant.options[color_index] | handleize %}
             <div
-              class="gap-4 justify-start overflow-x-auto mr-mobile-thumbnails md:justify-between md:flex-col md:gap-0 {% if forloop.first %}flex{% else %}hidden{% endif %}"
+              class="gap-4 justify-start overflow-x-auto mr-mobile-thumbnails md:justify-between md:flex-col md:gap-0 md:overflow-x-visible md:mr-0 {% if forloop.first %}flex{% else %}hidden{% endif %}"
               data-color="{{ color_value }}"
               product__thumbnails-set
             >
