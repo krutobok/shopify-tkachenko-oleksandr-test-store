@@ -3,7 +3,7 @@
   {%- assign image = variant.featured_image -%}
 
   <img
-    class="product__color product__img--mini{% if forloop.first %} product__color--active{% endif %}"
+    class="w-thumb h-thumb rounded-lg cursor-pointer{% if forloop.first %} border border-solid border-primary{% endif %}"
     src="{{ image | image_url: width: 88, height: 88 }}"
     width="88"
     height="88"
@@ -22,5 +22,6 @@
     data-available="{{ variant.available }}"
     role="button"
     aria-label="Set product color to {{ color_value }}"
+    product-color
   >
 {%- endfor -%}
