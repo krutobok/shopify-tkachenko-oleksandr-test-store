@@ -35,5 +35,8 @@
     margin-inline: auto;
 
     width: 100%;
+    .title-small {
+      @apply text-5xl leading-[36px] font-normal;
+    }
   }
 }
