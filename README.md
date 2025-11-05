@@ -1,68 +1,36 @@
-# 🧩 Shopify — Custom Forms (Contact & Product Inquiry)
+# 🎨 Shopify — Tailwind Integration & Featured Product Refactor
 
 ## 📋 Опис завдання
 
-Мета — створити дві кастомні секції з формами для теми **Dawn**, використовуючи можливості Shopify Forms API.
-
-**Завдання:**
-1. Реалізувати секцію **Contact Form** із полями:
-   - Name  
-   - Email (required)  
-   - Phone  
-   - Message (required)  
-   - Honeypot (антиспам)
-2. Реалізувати секцію **Product Inquiry / Add to cart Form**:
-   - На базі `{% form 'product', product %}`
-   - З кастомними властивостями `properties[...]`
-   - Валідацією кількості
-   - Обробкою недоступних варіантів
+Мета — інтегрувати **Tailwind CSS** у тему **Dawn** та провести рефакторинг секції **featured-product**, використовуючи лише утилітарні класи Tailwind.
 
 ---
 
 ## ✅ Виконана робота
 
-### 🔹 Секція `contact-form-custom.liquid`
-- Створено форму з правильними атрибутами:
-  - `type="email"`, `required`, `autocomplete`, `aria-invalid`, `aria-describedby`
-- Додано **honeypot-поле** для запобігання спаму.
-- Реалізовано відображення помилок і повідомлення про успіх через `role="status"` і `aria-live="polite"`.
-- Підтримується валідація з боку Shopify.
-- Усі тексти виведені через переклади (`| t`).
-
-### 🔹 Секція `product-inquiry-form.liquid`
-- Створено форму на базі `{% form 'product', product %}`.
-- Передається правильний `variant.id` для додавання в кошик.
-- Додано кастомні поля:
-  - `properties[Reason]` — текстове поле;
-  - `properties[Preferred contact]` — select.
-- Реалізовано базову валідацію кількості (`min="1"`) і повідомлення при недоступному варіанті.
+- Інтегровано **Tailwind CSS** у тему Shopify (Dawn):
+  - Перевірено роботу класів — стилі успішно застосовуються до елементів теми.
+- Проведено **рефактор секції `featured-product`**(`banner-product`):
+  - Усі стилі замінено на утилітарні класи Tailwind.
+  - Повністю видалено або закоментовано попередні стилі секції, що дублювали функціональність Tailwind.
+  - Адаптивність реалізовано через вбудовані брейкпоінти (`md:`, `xl:`).
+  - Кнопки, зображення, типографіка та відступи тепер формуються виключно за допомогою Tailwind-класів.
 
 ---
 
-## 🔧 Технології
+## 🔧 Технології та підходи
 
-- **Shopify Liquid:**  
-  `form`, `form.errors`, `default_errors`, `t`, `aria-*`, `for`, `if/else`
-- **Accessibility (a11y):**  
-  `aria-live`, `aria-invalid`, `aria-describedby`, `role="status"`
-- **Honeypot-антиспам:** приховане поле `contact[trap]`
-- **Localization:** усі тексти через `| t`, без хардкоду
-
----
-
-## 📝 Примітки
-
-- Базова логіка відправки форм працює через стандартну Shopify систему.  
-- AJAX-відправка не реалізована.
+- **Tailwind CSS** — основна бібліотека стилів.
+- **Shopify CLI** — для побудови та гарячого оновлення.
+- **Responsive design** через Tailwind утиліти (`grid-cols-1 md:grid-cols-2 lg:grid-cols-4` тощо).
 
 ---
 
 ## 🔗 Ресурси
 
-- **GitHub (branch: `shopify-forms`)**  
-  [https://github.com/krutobok/shopify-tkachenko-oleksandr-test-store/tree/shopify-forms](https://github.com/krutobok/shopify-tkachenko-oleksandr-test-store/tree/forms)
+- **GitHub (branch: `tailwind-integration`)**  
+  [https://github.com/krutobok/shopify-tkachenko-oleksandr-test-store/tree/css](https://github.com/krutobok/shopify-tkachenko-oleksandr-test-store/tree/css)
 
-- **Стор Shopify:**  
-  [https://tkachenko-oleksandr-test-store.myshopify.com/?preview_theme_id=183432380725](https://tkachenko-oleksandr-test-store.myshopify.com/?preview_theme_id=183432380725)  
+- **Тестовий стор:**  
+  [https://tkachenko-oleksandr-test-store.myshopify.com/?preview_theme_id=183506731317](https://tkachenko-oleksandr-test-store.myshopify.com/?preview_theme_id=183506731317)  
   🔑 Пароль: `nowvol`
-

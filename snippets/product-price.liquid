@@ -1,8 +1,8 @@
-<p class="product__price text-large">
+<p class="text-secondary text-large" product-price>
   {%- if product.compare_at_price > product.price -%}
-    <span class="price-sale">{{ product.price | money_without_trailing_zeros }}</span>
-    <span class="price-old">{{ product.compare_at_price | money_without_trailing_zeros }}</span>
+    <span>{{ product.price | money_without_trailing_zeros }}</span>
+    <span class="line-through">{{ product.compare_at_price | money_without_trailing_zeros }}</span>
   {%- else -%}
-    <span class="price">{{ product.price | money }}</span>
+    <span>{{ product.price | money }}</span>
   {%- endif -%}
 </p>

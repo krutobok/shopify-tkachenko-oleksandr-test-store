@@ -1,4 +1,4 @@
-{{ 'banner-product.css' | asset_url | stylesheet_tag }}
+{% comment %} {{ 'banner-product.css' | asset_url | stylesheet_tag }} {% endcomment %}
 
 {% if section.settings.product != blank %}
   {% assign current_product = all_products[section.settings.product] %}
@@ -6,12 +6,12 @@
   {% assign current_product = all_products[section.settings.handle] %}
 {% endif %}
 
-<section class="product section">
-  <div class="container">
+<section class="py-14 md:py-20">
+  <div class="custom-container">
     {%- if current_product == blank -%}
       <p>Product not found</p>
     {%- else -%}
-      <div class="product__wrapper">
+      <div class="flex text-primary items-stretch gap-6 flex-col md:items-center xl:items-stretch xl:gap-14 xl:flex-row">
         {%- assign color_index = -1 -%}
         {%- for option in current_product.options -%}
           {%- assign opt_down = option | downcase -%}
@@ -24,10 +24,14 @@
           {%- endif -%}
         {%- endfor -%}
 
-        <div class="product__gallery">
+        <div class="flex flex-col-reverse gap-4 shrink-0 md:flex-row md:gap-6">
           {% for variant in current_product.variants %}
             {% assign color_value = variant.options[color_index] | handleize %}
-            <div class="product__thumbnails-set {% if forloop.first %}active{% endif %}" data-color="{{ color_value }}">
+            <div
+              class="gap-4 justify-start overflow-x-auto mr-mobile-thumbnails md:justify-between md:flex-col md:gap-0 md:overflow-x-visible md:mr-0 {% if forloop.first %}flex{% else %}hidden{% endif %}"
+              data-color="{{ color_value }}"
+              product__thumbnails-set
+            >
               {% assign count = 0 %}
               {% for image in current_product.images %}
                 {% assign img_name = image.src | split: '/' | last | split: '.' | first | downcase %}
@@ -35,13 +39,21 @@
                   {% assign count = count | plus: 1 %}
                   {% if count <= 5 %}
                     <button
-                      class="product__thumb {% if count == 1 %}product__thumb--active{% endif %}"
+                      class="
+                        w-thumb h-thumb shrink-0 border-none p-0 rounded-lg  aria-selected:relative
+                        aria-selected:before:absolute
+                        aria-selected:before:inset-0
+                        aria-selected:before:z-10
+                        aria-selected:before:rounded-lg
+                        aria-selected:before:bg-primary/20
+                      "
                       aria-label="Change main product photo to {{ color_value }} photo {{ count }}"
                       aria-selected="{% if count == 1 %}true{% else %}false{% endif %}"
                       data-image="{{ image | image_url: width: 536 }}"
+                      product__thumb
                     >
                       <img
-                        class="product__thumb-img product__img--mini"
+                        class="w-thumb h-thumb rounded-lg cursor-pointer"
                         width="88"
                         height="88"
                         src="{{ image | image_url: width: 88, height: 88 }}"
@@ -54,31 +66,33 @@
             </div>
           {% endfor %}
 
-          <div class="product__main">
+          <div class="max-w-main-image relative w-full">
             {% render 'product-badge', product: current_product %}
             {%- if current_product.featured_image -%}
               <img
-                class="product__image"
+                class="max-w-main-image w-full rounded-lg aspect-square"
                 src="{{ current_product.featured_image | image_url: width: 536, height: 536 }}"
                 width="536"
                 height="536"
                 alt="{{ current_product.featured_image.alt | default: current_product.title | default: 'Фото товару' }}"
+                product__image
               >
             {%- else -%}
               <img
-                class="product__image"
+                class="max-w-main-image w-full rounded-lg aspect-square"
                 width="536"
                 height="536"
                 src="{{ 'placeholder.svg' | image_url: width: 536, height: 536 }}"
                 alt="{{ current_product.title | default: 'Фото товару' }}"
+                product__image
               >
             {%- endif -%}
           </div>
         </div>
 
-        <div class="product__info">
-          <div class="product__text-inner">
-            <h2 class="product__title title-small">{{ current_product.title | escape }}</h2>
+        <div class="max-w-product-info w-full flex flex-col justify-between gap-6 xl:gap-2">
+          <div>
+            <h2 class="mt-0 mb-3 text-primary! title-small">{{ current_product.title | escape }}</h2>
             {% if current_product.price != blank %}
               {% render 'product-price', product: current_product %}
             {% endif %}
@@ -86,7 +100,7 @@
 
           {%- if color_index != -1 -%}
             <div
-              class="product__colors"
+              class="flex gap-2 text-medium"
             >
               {{ 'product.banner.select_color' | t: default: 'Оберіть колір' }}
               {% render 'product-colors', product: current_product, color_index: color_index %}
@@ -95,27 +109,27 @@
             <p>No color option found for this product.</p>
           {%- endif -%}
 
-          <div class="product__size-inner">
-            <p class="product__size-text text-medium">Select Size:</p>
-            <div class="product__sizes">
-              <button class="product__size product__size--active btn">UK 5.5</button>
-              <button class="product__size btn">UK 6 (EU 39)</button>
-              <button class="product__size btn">UK 6 (EU 40)</button>
-              <button class="product__size btn">UK 6.5</button>
-              <button class="product__size btn">UK 7</button>
-              <button class="product__size btn">UK 7.5</button>
+          <div>
+            <p class="mb-3 text-medium">Select Size:</p>
+            <div class="custom-grid grid-cols-2 gap-2 md:grid-cols-3">
+              <button class="text-medium border border-solid border-primary btn">UK 5.5</button>
+              <button class="text-medium btn border border-solid border-border">UK 6 (EU 39)</button>
+              <button class="text-medium btn border border-solid border-border">UK 6 (EU 40)</button>
+              <button class="text-medium btn border border-solid border-border">UK 6.5</button>
+              <button class="text-medium btn border border-solid border-border">UK 7</button>
+              <button class="text-medium btn border border-solid border-border">UK 7.5</button>
             </div>
           </div>
 
           <a
             id="add-to-cart-link"
             href="{{routes.cart_add_url}}?id={{ current_product.selected_or_first_available_variant.id }}&quantity=1"
-            class="product__btn btn btn-dark"
+            class="btn block text-center bg-primary text-primary-bg hover:bg-secondary"
           >
             Add To Bag
           </a>
 
-          <p class="product__desc text-medium">
+          <p class="p-0 text-secondary text-medium">
             {{- current_product.description | default: 'Для цього товару відсутній опис' | escape -}}
           </p>
         </div>
@@ -124,34 +138,41 @@
   </div>
 </section>
 <script>
-  const colorButtons = document.querySelectorAll('.product__color');
-  const thumbs = document.querySelectorAll('.product__thumb');
-  const thumbnailSets = document.querySelectorAll('.product__thumbnails-set');
-  const mainImage = document.querySelector('.product__image');
-  const priceWrapper = document.querySelector('.product__price');
+  const colorButtons = document.querySelectorAll('img[product-color]');
+  const thumbs = document.querySelectorAll('button[product__thumb]');
+  const thumbnailSets = document.querySelectorAll('div[product__thumbnails-set]');
+  const mainImage = document.querySelector('img[product__image]');
+  const priceWrapper = document.querySelector('p[product-price]');
   const addToCartLink = document.getElementById('add-to-cart-link');
 
   colorButtons.forEach((btn) => {
     btn.addEventListener('click', () => {
       const selectedColor = btn.dataset.color.toLowerCase().replace(/\s+/g, '-');
 
-      colorButtons.forEach((c) => c.classList.remove('product__color--active'));
-      btn.classList.add('product__color--active');
-      thumbnailSets.forEach((set) => set.classList.remove('active'));
+      colorButtons.forEach((c) => c.classList.remove('border', 'border-solid', 'border-primary'));
+      btn.classList.add('border', 'border-solid', 'border-primary');
 
-      const activeSet = document.querySelector(`.product__thumbnails-set[data-color="${selectedColor}"]`);
-      if (activeSet) {
-        activeSet.classList.add('active');
+      thumbnailSets.forEach((set) => {
+        if (set.dataset.color === selectedColor) {
+          set.classList.add('flex');
+          set.classList.remove('hidden');
 
-        const firstThumb = activeSet.querySelector('.product__thumb');
-        if (firstThumb) {
-          mainImage.src = firstThumb.dataset.image;
+          const firstThumb = set.querySelector('button[product__thumb]');
+          if (firstThumb) {
+            mainImage.src = firstThumb.dataset.image;
+            firstThumb.setAttribute('aria-selected', 'true');
+          }
+        } else {
+          set.classList.add('hidden');
+          set.classList.remove('flex');
         }
-      }
+      });
+
       const variantId = btn.dataset.variantId;
       if (variantId) {
         addToCartLink.href = `/cart/add?id=${variantId}&quantity=1`;
       }
+
       const price = btn.dataset.price;
       const comparePrice = btn.dataset.comparePrice;
       if (
@@ -159,14 +180,15 @@
         parseFloat(comparePrice.replace(/[^0-9.]/g, '')) > parseFloat(price.replace(/[^0-9.]/g, ''))
       ) {
         priceWrapper.innerHTML = `
-        <span class="price-sale">${price}</span>
-        <span class="price-old">${comparePrice}</span>
+        <span>${price}</span>
+        <span class="line-through">${comparePrice}</span>
       `;
       } else {
         priceWrapper.innerHTML = `
-        <span class="price">${price}</span>
+        <span>${price}</span>
       `;
       }
+
       alert(btn.dataset.message);
     });
   });
@@ -176,11 +198,8 @@
       mainImage.src = newImage;
 
       thumbs.forEach((t) => {
-        t.classList.remove('product__thumb--active');
         t.setAttribute('aria-selected', 'false');
       });
-
-      btn.classList.add('product__thumb--active');
       btn.setAttribute('aria-selected', 'true');
     });
   });

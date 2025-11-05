@@ -1,0 +1,80 @@
+<section>
+  <div class="container">
+    <div>
+      <h2 class="bg-amber-600">Featured Collection</h2>
+      {% assign collection = collections[section.settings.collection] %}
+      {% if collection and collection.products_count > 0 %}
+        <div class="swiper">
+          <div class="swiper-wrapper">
+            {% for product in collection.products %}
+              <div class="swiper-slide">
+                <a href="{{ product.url }}">
+                  {% if product.featured_image %}
+                    <img
+                      src="{{ product.featured_image | image_url: width: 312 }}"
+                      alt="{{ product.title | escape }}"
+                      loading="lazy"
+                      width="312"
+                      height="312"
+                    >
+                  {% endif %}
+                  <h3>{{ product.title }}</h3>
+                  <p>{{ product.price | money }}</p>
+                </a>
+              </div>
+            {% endfor %}
+          </div>
+
+          <div class="swiper-button-prev"></div>
+          <div class="swiper-button-next"></div>
+        </div>
+      {% else %}
+        <p>Будь ласка, виберіть колекцію з товарами.</p>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const slider = new Swiper('.swiper', {
+      slidesPerView: 1.1,
+      spaceBetween: 16,
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+        enabled: false,
+      },
+      breakpoints: {
+        768: {
+          slidesPerView: 2.5,
+          spaceBetween: 24,
+          navigation: { enabled: true },
+        },
+        1280: {
+          slidesPerView: 4,
+          spaceBetween: 24,
+          navigation: { enabled: true },
+        },
+      },
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Featured Slider",
+  "settings": [
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Колекція для слайдера"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured Slider"
+    }
+  ]
+}
+{% endschema %}

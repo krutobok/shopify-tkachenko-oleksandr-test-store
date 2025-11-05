@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #111111;
+  --color-primary-bg: #ffffff;
+  --color-secondary: #737373;
+  --color-border: #ebebeb;
+
+  --spacing-container-size: 1368px;
+
+  --font-size-title: 48px;
+  --font-size-title-small: 30px;
+  --font-size-large: 16px;
+  --font-size-medium: 14px;
+
+  --line-height-title: 100%;
+  --line-height-title-small: 36px;
+  --line-height-large: 24px;
+  --line-height-medium: 20px;
+
+  --spacing-thumb: 88px;
+  --max-width-main: 536px;
+  --max-width-info: 612px;
+  --spacing-thumb: 88px;
+  --spacing-main-image: 536px;
+  --spacing-product-info: 612px;
+  --spacing-mobile-thumbnails: -16px;
+}
+
+@layer components {
+  .custom-container {
+    @apply px-4 md:px-6 mx-auto w-full max-w-container-size;
+  }
+  .title-small {
+    @apply text-2xl! leading-8 md:text-3xl! md:leading-9 font-normal;
+  }
+  .text-medium {
+    @apply text-sm leading-5;
+  }
+  .text-large {
+    @apply text-base leading-6;
+  }
+  .custom-grid {
+    @apply grid;
+  }
+  .btn {
+    @apply text-base leading-6 p-4 border-none outline-none cursor-pointer 
+           rounded-lg bg-primary-bg text-primary 
+           transition-all duration-300;
+  }
+}
