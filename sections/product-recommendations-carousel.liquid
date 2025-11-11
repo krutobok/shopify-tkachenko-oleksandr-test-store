@@ -1,0 +1,164 @@
+{{ 'product-recommendations-carousel.css' | asset_url | stylesheet_tag }}
+
+{% style %}
+  .recs-carousel-{{ section.id }} {
+    display: none;
+  }
+{% endstyle %}
+
+<product-recommendations-carousel
+  class="recs-carousel-{{ section.id }} recs-carousel"
+  data-section-id="{{ section.id }}"
+  data-product-id="{{ product.id }}"
+  data-limit="{{ section.settings.limit }}"
+  data-currency="{{ shop.currency }}"
+>
+  <div class="container">
+    <div>
+      {% if section.settings.title != blank %}
+        <h2 class="recs-carousel__title">{{ section.settings.title | escape }}</h2>
+      {% endif %}
+
+      <div class="swiper recs-carousel__swiper">
+        <div class="swiper-wrapper recs-carousel__swiper-wrapper"></div>
+
+        <div class="swiper-button-prev recs-carousel__swiper-button-prev"></div>
+        <div class="swiper-button-next recs-carousel__swiper-button-next"></div>
+      </div>
+    </div>
+  </div>
+</product-recommendations-carousel>
+
+<script>
+  class ProductRecommendations extends HTMLElement {
+    constructor() {
+      super();
+
+      this.swiperWrapper = this.querySelector('.swiper-wrapper');
+      this.swiperContainer = this.querySelector('.swiper');
+
+      const productId = this.dataset.productId;
+      const limit = this.dataset.limit;
+      const sectionId = this.dataset.sectionId;
+      this.currency = this.dataset.currency;
+
+      if (!productId) return;
+
+      const apiUrl = `/recommendations/products.json?product_id=${productId}&limit=${limit}&section_id=${sectionId}`;
+
+      this.fetchRecommendations(apiUrl);
+    }
+
+    async fetchRecommendations(apiUrl) {
+      try {
+        const response = await fetch(apiUrl);
+        if (!response.ok) throw new Error(response.statusText);
+        const data = await response.json();
+
+        if (data.products && data.products.length > 0) {
+          this.renderProducts(data.products);
+
+          this.initCarousel();
+
+          this.style.display = 'block';
+        }
+      } catch (error) {
+        console.error('Failed to fetch product recommendations:', error);
+      }
+    }
+
+    renderProducts(products) {
+      const productCardsHtml = products
+        .map((product) => {
+          const imageUrl = product.featured_image
+            ? product.featured_image.replace(/(\.jpg|\.png|\.jpeg|\.gif)/, '_312x$1')
+            : '{{ "product-1.jpg" | asset_img_url: "312x" }}';
+
+          return `
+          <div class="swiper-slide recs-carousel__product">
+            <a class='recs-carousel__product-link'' href="${product.url}">
+              <img
+                class='recs-carousel__product-img'
+                src="${imageUrl}"
+                alt="${product.title.replace(/"/g, "'")}"
+                loading="lazy"
+                width="312"
+                height="312"
+              >
+              <h3 class='recs-carousel__product-title'>${product.title}</h3>
+              <p class='recs-carousel__product-price'> ${this.formatMoney(product.price)}</p>
+            </a>
+          </div>
+        `;
+        })
+        .join('');
+
+      this.swiperWrapper.innerHTML = productCardsHtml;
+    }
+
+    initCarousel() {
+      const slider = new Swiper(this.swiperContainer, {
+        slidesPerView: 1.1,
+        spaceBetween: 16,
+        navigation: {
+          nextEl: this.querySelector('.swiper-button-next'),
+          prevEl: this.querySelector('.swiper-button-prev'),
+          enabled: false,
+        },
+        breakpoints: {
+          768: {
+            slidesPerView: 2.5,
+            spaceBetween: 24,
+            navigation: { enabled: true },
+          },
+          1280: {
+            slidesPerView: 4,
+            spaceBetween: 24,
+            navigation: { enabled: true },
+          },
+        },
+      });
+    }
+
+    formatMoney(price) {
+      try {
+        return new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: this.currency,
+        }).format(price / 100);
+      } catch (e) {
+        return `${this.currency} ${(price / 100).toFixed(2)}`;
+      }
+    }
+  }
+
+  customElements.define('product-recommendations-carousel', ProductRecommendations);
+</script>
+{% schema %}
+{
+  "name": "Product Recommendations",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "You might also like"
+    },
+    {
+      "type": "range",
+      "id": "limit",
+      "min": 4,
+      "max": 12,
+      "step": 1,
+      "label": "Number of products",
+      "default": 8
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Recommendations"
+    }
+  ]
+}
+{% endschema %}

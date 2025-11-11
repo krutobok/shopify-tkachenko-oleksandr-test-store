@@ -1,36 +1,83 @@
-# 🎨 Shopify — Tailwind Integration & Featured Product Refactor
+# 🧩 Shopify — Аналіз JS та Карусель Рекомендацій
 
 ## 📋 Опис завдання
 
-Мета — інтегрувати **Tailwind CSS** у тему **Dawn** та провести рефакторинг секції **featured-product**, використовуючи лише утилітарні класи Tailwind.
+Мета — дослідити вплив різних методів завантаження JavaScript на продуктивність теми Shopify та розробити асинхронний, оптимізований компонент "Карусель Рекомендацій" з використанням Shopify API.
+
+**Завдання:**
+
+1.  **Частина 1: Аналіз продуктивності JS**
+    - Дослідити 4 методи підключення JS: інлайн-скрипт, `{{ '...' | asset_url | script_tag }}`, відкладене завантаження (`defer`) та тег `{% javascript %}`.
+    - Виміряти вплив на завантаження та рендеринг за допомогою Chrome DevTools.
+    - Визначити render-blocking методи.
+2.  **Частина 2: Кастомний компонент "Карусель рекомендацій"**
+    - Розробити секцію, що підтягує товари через **Search & Discovery API**.
+    - Компонент має бути контекстним (показувати різні рекомендації для різних товарів).
+    - Реалізувати відображення у форматі каруселі (Swiper.js) та забезпечити швидке завантаження.
+    - Використати наданий дизайн-макет та стилі.
 
 ---
 
 ## ✅ Виконана робота
 
-- Інтегровано **Tailwind CSS** у тему Shopify (Dawn):
-  - Перевірено роботу класів — стилі успішно застосовуються до елементів теми.
-- Проведено **рефактор секції `featured-product`**(`banner-product`):
-  - Усі стилі замінено на утилітарні класи Tailwind.
-  - Повністю видалено або закоментовано попередні стилі секції, що дублювали функціональність Tailwind.
-  - Адаптивність реалізовано через вбудовані брейкпоінти (`md:`, `xl:`).
-  - Кнопки, зображення, типографіка та відступи тепер формуються виключно за допомогою Tailwind-класів.
+### 🔹 Частина 1. Аналіз продуктивності JS
+
+- Проведено тестування 4-х методів підключення скриптів на "чистій" сторінці теми.
+- Використано інструменти **Chrome DevTools (Network & Performance)** з емуляцією **Slow 3G** та вимкненим кешем для наочності.
+- Для імітації реального навантаження використано "важкий" скрипт (3-секундний цикл `while`), що блокує CPU.
+- **Виявлено render-blocking методи:**
+  - Стандартний `{{ 'script.js' | asset_url | script_tag }}` (при розміщенні в `<head>`).
+  - Інлайн-скрипт (при розміщенні в `<head>`).
+- **Виявлено неблокуючі методи:**
+  - Підключення з атрибутом `defer` (дозволяє сторінці відрендеритися до виконання скрипта).
+  - Тег `{% javascript %}` (Shopify автоматично оптимізує його, завантажуючи асинхронно).
+
+### 🔹 Частина 2. Кастомний компонент "Карусель рекомендацій"
+
+- Створено нову секцію `sections/product-recommendations-carousel.liquid`.
+- Архітектура компонента побудована на базі **JavaScript Custom Element** (`<product-recommendations-carousel>`) для повної інкапсуляції логіки.
+- Реалізовано асинхронне (`async/await`) отримання даних з ендпоінту `/recommendations/products.json` (Search & Discovery API).
+- Компонент автоматично зчитує `data-product-id` зі сторінки, передаючи його в API для отримання релевантних рекомендацій.
+- Інтегровано бібліотеку **Swiper.js** для функціоналу каруселі, використовуючи HTML-структуру та CSS-стилі з тестового макету.
+- **Оптимізація продуктивності:**
+  - Секція прихована (`display: none`) до повного завантаження даних, що запобігає "стрибку" контенту (CLS).
+  - Зображення товарів завантажуються з атрибутом `loading="lazy"`.
+- Реалізовано динамічне форматування ціни з урахуванням валюти магазину (`data-currency="{{ shop.currency }}"`).
 
 ---
 
-## 🔧 Технології та підходи
+## 🔧 Технології
 
-- **Tailwind CSS** — основна бібліотека стилів.
-- **Shopify CLI** — для побудови та гарячого оновлення.
-- **Responsive design** через Tailwind утиліти (`grid-cols-1 md:grid-cols-2 lg:grid-cols-4` тощо).
+- **Shopify Liquid:**
+  `{% javascript %}`, `asset_url`, `stylesheet_tag`, `data-attributes`, `shop.currency`
+- **Shopify API:**
+  Search & Discovery API (`/recommendations/products.json`)
+- **JavaScript (ES6+):**
+  Custom Elements (`class extends HTMLElement`), `async/await`, `fetch`, `Intl.NumberFormat`
+- **Інструменти:**
+  Chrome DevTools (Performance & Network)
+- **CSS:**
+  Асет-файли, `calc()`, CSS Custom Properties (`var()`), `@media`
+- **Залежності:**
+  Swiper.js
+
+---
+
+## 📝 Примітки
+
+- **Скріншоти** детального аналізу з вкладки "Performance" для Частини 1 знаходяться у папці `screenshots`.
+- **Короткий висновок** за результатами Частини 1 знаходиться у файлі `task1.txt`.
+- В першому завданні для імітації реального навантаження використано "важкий" скрипт (3-секундний цикл `while`), що блокує CPU, оскільки зі звичайним консоль графік не був читкий.
+- Компонент "Карусель рекомендацій" вимагає глобального підключення бібліотеки Swiper.js у `theme.liquid` для коректної роботи.
+- Під час виконання зіткнувся з проблемою малої кількості товарів в блоці рекомендацій. Початкова кількість рекомендованих товарів (1-2) була пов'язана з фільтрацією "Out of Stock" товарів з боку API.
 
 ---
 
 ## 🔗 Ресурси
 
-- **GitHub (branch: `tailwind-integration`)**  
-  [https://github.com/krutobok/shopify-tkachenko-oleksandr-test-store/tree/css](https://github.com/krutobok/shopify-tkachenko-oleksandr-test-store/tree/css)
+- **GitHub (branch: `product-carousel-feature`)**
+  [https://github.com/krutobok/shopify-tkachenko-oleksandr-test-store/tree/js](https://github.com/krutobok/shopify-tkachenko-oleksandr-test-store/tree/js)
 
-- **Тестовий стор:**  
-  [https://tkachenko-oleksandr-test-store.myshopify.com/?preview_theme_id=183506731317](https://tkachenko-oleksandr-test-store.myshopify.com/?preview_theme_id=183506731317)  
+- **Стор Shopify:**
+  [https://tkachenko-oleksandr-test-store.myshopify.com/?preview_theme_id=183719461173](https://tkachenko-oleksandr-test-store.myshopify.com/?preview_theme_id=183719461173)
   🔑 Пароль: `nowvol`
