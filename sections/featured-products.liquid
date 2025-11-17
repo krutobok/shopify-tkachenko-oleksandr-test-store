@@ -1,6 +1,5 @@
 {{ 'featured-products.css' | asset_url | stylesheet_tag }}
 
-{% comment %} {%- render 'cart-drawer' -%} {% endcomment %}
 <section id="featured-products-{{ section.id }}" class="featured-products-section section-{{ section.id }}">
   {%- assign collection_handle = section.settings.collection -%}
   {%- assign collection = collections[collection_handle] -%}

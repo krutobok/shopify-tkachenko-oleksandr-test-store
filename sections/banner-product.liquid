@@ -1,5 +1,3 @@
-{% comment %} {{ 'banner-product.css' | asset_url | stylesheet_tag }} {% endcomment %}
-
 {% if section.settings.product != blank %}
   {% assign current_product = all_products[section.settings.product] %}
 {% elsif section.settings.handle != blank %}
