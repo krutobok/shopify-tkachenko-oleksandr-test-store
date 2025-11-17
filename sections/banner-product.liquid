@@ -97,11 +97,11 @@
           </div>
 
           {%- if color_index != -1 -%}
-            <div
-              class="flex gap-2 text-medium"
-            >
-              {{ 'product.banner.select_color' | t: default: 'Оберіть колір' }}
-              {% render 'product-colors', product: current_product, color_index: color_index %}
+            <div>
+              <p class="text-medium  mb-1.5">{{ 'product.banner.select_color' | t: default: 'Оберіть колір:' }}</p>
+              <div class="flex gap-2 text-medium">
+                {% render 'product-colors', product: current_product, color_index: color_index %}
+              </div>
             </div>
           {%- else -%}
             <p>No color option found for this product.</p>
