@@ -58,6 +58,16 @@
               {% if product.featured_image %}
                 <img
                   src="{{ product.featured_image | image_url: width: 300, height: 300 }}"
+
+                  srcset="
+                    {{ product.featured_image | image_url: width: 250 }} 250w,
+                    {{ product.featured_image | image_url: width: 300 }} 300w,
+                    {{ product.featured_image | image_url: width: 500 }} 500w,
+                    {{ product.featured_image | image_url: width: 600 }} 600w
+                  "
+
+                  sizes="(max-width: 767px) 250px, 300px"
+
                   width="300"
                   height="300"
                   alt="{{ product.title | escape }}"
@@ -77,14 +87,16 @@
             <h3 class="featured-product__title">{{ product.title }}</h3>
 
             {% if section.settings.show_price %}
-              <p class="featured-product__price">{{ product.price | money }}</p>
+              <p class="featured-product__price text-medium">{{ product.price | money }}</p>
             {% endif %}
 
             {% if section.settings.show_rating %}
               {% if product.metafields.reviews.rating.value %}
-                <div class="featured-product__rating">⭐ {{ product.metafields.reviews.rating.value }} / 5</div>
+                <div class="featured-product__rating text-medium">
+                  ⭐ {{ product.metafields.reviews.rating.value }} / 5
+                </div>
               {% else %}
-                <div class="featured-product__rating">⭐⭐⭐⭐☆ <span>(4.5/5)</span></div>
+                <div class="featured-product__rating text-medium">⭐⭐⭐⭐☆ <span>(4.5/5)</span></div>
               {% endif %}
             {% endif %}
 
