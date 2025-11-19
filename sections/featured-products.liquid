@@ -11,11 +11,11 @@
 
     {% if collection and collection.products_count > 0 %}
       <div class="featured-products__controls">
-        <label for="sort-by">Сортувати:</label>
+        <label for="sort-by " class="text-large">Сортувати:</label>
 
         {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
 
-        <select id="sort-by" class="featured-products__sort" data-section-id="{{ section.id }}">
+        <select id="sort-by" class="featured-products__sort text-large" data-section-id="{{ section.id }}">
           <option
             value="best-selling"
             {% if sort_by == 'best-selling' %}
@@ -56,25 +56,19 @@
           <div class="featured-product">
             <a href="{{ product.url }}" class="featured-product__image">
               {% if product.featured_image %}
-                <img
-                  src="{{ product.featured_image | image_url: width: 300, height: 300 }}"
-
-                  srcset="
-                    {{ product.featured_image | image_url: width: 250 }} 250w,
-                    {{ product.featured_image | image_url: width: 300 }} 300w,
-                    {{ product.featured_image | image_url: width: 500 }} 500w,
-                    {{ product.featured_image | image_url: width: 600 }} 600w
-                  "
-
-                  sizes="(max-width: 767px) 250px, 300px"
-
-                  width="300"
-                  height="300"
-                  alt="{{ product.title | escape }}"
-                  loading="lazy"
-                >
+                {{
+                  product.featured_image
+                  | image_url: width: 600, height: 600, crop: 'center'
+                  | image_tag:
+                    class: 'featured-product__img',
+                    alt: product.title,
+                    widths: '250, 300, 500, 600',
+                    sizes: '(min-width: 767px) 300px, 250px',
+                    loading: 'lazy'
+                }}
               {% else %}
                 <img
+                  class="featured-product__img"
                   src="{{ 'placeholder.svg' | asset_url }}"
                   width="300"
                   height="300"

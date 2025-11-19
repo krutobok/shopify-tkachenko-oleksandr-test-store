@@ -128,8 +128,4 @@
   .designers__grid {
     grid-template-columns: repeat(3, 1fr);
   }
-
-  .designers__title {
-    font-size: 2.5rem;
-  }
 }

@@ -29,10 +29,17 @@
   background-color: var(--primary-color);
   color: var(--primary-bg-color);
 }
+.featured-product__img {
+  width: 100%;
+  max-width: 250px;
+}
 @media (min-width: 767px) {
   .featured-products__grid {
     grid-template-columns: 1fr 1fr;
     gap: 20px;
+  }
+  .featured-product__img {
+    max-width: 300px;
   }
 }
 @media (min-width: 1024px) {

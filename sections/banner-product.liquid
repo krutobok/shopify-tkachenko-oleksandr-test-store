@@ -67,23 +67,28 @@
           <div class="max-w-main-image relative w-full">
             {% render 'product-badge', product: current_product %}
             {%- if current_product.featured_image -%}
-              <img
-                class="max-w-main-image w-full rounded-lg aspect-square"
-                src="{{ current_product.featured_image | image_url: width: 536, height: 536 }}"
-                width="536"
-                height="536"
-                alt="{{ current_product.featured_image.alt | default: current_product.title | default: 'Фото товару' }}"
-                product__image
-              >
+              {{
+                current_product.featured_image
+                | image_url: width: 1072, height: 1072, crop: 'center'
+                | image_tag:
+                  class: 'max-w-main-image w-full rounded-lg aspect-square product__image',
+                  alt: current_product.featured_image.alt
+                | default: current_product.title
+                | default: 'Фото товару',
+                  widths: '375, 550, 750, 1072',
+                  sizes: '(min-width: 568px) 536px, 375px',
+                  loading: 'lazy'
+              }}
             {%- else -%}
-              <img
-                class="max-w-main-image w-full rounded-lg aspect-square"
-                width="536"
-                height="536"
-                src="{{ 'placeholder.svg' | image_url: width: 536, height: 536 }}"
-                alt="{{ current_product.title | default: 'Фото товару' }}"
-                product__image
-              >
+              {{
+                'placeholder.svg'
+                | asset_url
+                | image_tag:
+                  class: 'max-w-main-image w-full rounded-lg aspect-square',
+                  width: 536,
+                  height: 536,
+                  alt: 'Placeholder'
+              }}
             {%- endif -%}
           </div>
         </div>
@@ -139,7 +144,7 @@
   const colorButtons = document.querySelectorAll('img[product-color]');
   const thumbs = document.querySelectorAll('button[product__thumb]');
   const thumbnailSets = document.querySelectorAll('div[product__thumbnails-set]');
-  const mainImage = document.querySelector('img[product__image]');
+  const mainImage = document.querySelector('.product__image');
   const priceWrapper = document.querySelector('p[product-price]');
   const addToCartLink = document.getElementById('add-to-cart-link');
 
