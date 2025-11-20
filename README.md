@@ -75,7 +75,7 @@
 
 ## 🔗 Ресурси
 
-- **GitHub (branch: `product-carousel-feature`)**
+- **GitHub (branch: `js`)**
   [https://github.com/krutobok/shopify-tkachenko-oleksandr-test-store/tree/js](https://github.com/krutobok/shopify-tkachenko-oleksandr-test-store/tree/js)
 
 - **Стор Shopify:**
