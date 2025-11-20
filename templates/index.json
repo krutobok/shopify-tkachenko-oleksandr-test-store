@@ -167,13 +167,6 @@
       "settings": {
         "title": "Contact Us"
       }
-    },
-    "featured_product_custom_ME8gyU": {
-      "type": "featured-product-custom",
-      "name": "Featured Slider",
-      "settings": {
-        "collection": "featured-products"
-      }
     }
   },
   "order": [
@@ -182,7 +175,6 @@
     "promo_banners_iYU9Vm",
     "featured_products_8tq48x",
     "designers_gXz9LC",
-    "contact_form_custom_qepYPW",
-    "featured_product_custom_ME8gyU"
+    "contact_form_custom_qepYPW"
   ]
 }

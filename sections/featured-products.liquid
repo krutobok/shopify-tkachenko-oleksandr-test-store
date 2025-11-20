@@ -1,6 +1,5 @@
 {{ 'featured-products.css' | asset_url | stylesheet_tag }}
 
-{% comment %} {%- render 'cart-drawer' -%} {% endcomment %}
 <section id="featured-products-{{ section.id }}" class="featured-products-section section-{{ section.id }}">
   {%- assign collection_handle = section.settings.collection -%}
   {%- assign collection = collections[collection_handle] -%}
@@ -12,11 +11,11 @@
 
     {% if collection and collection.products_count > 0 %}
       <div class="featured-products__controls">
-        <label for="sort-by">Сортувати:</label>
+        <label for="sort-by " class="text-large">Сортувати:</label>
 
         {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
 
-        <select id="sort-by" class="featured-products__sort" data-section-id="{{ section.id }}">
+        <select id="sort-by" class="featured-products__sort text-large" data-section-id="{{ section.id }}">
           <option
             value="best-selling"
             {% if sort_by == 'best-selling' %}
@@ -57,15 +56,19 @@
           <div class="featured-product">
             <a href="{{ product.url }}" class="featured-product__image">
               {% if product.featured_image %}
-                <img
-                  src="{{ product.featured_image | image_url: width: 300, height: 300 }}"
-                  width="300"
-                  height="300"
-                  alt="{{ product.title | escape }}"
-                  loading="lazy"
-                >
+                {{
+                  product.featured_image
+                  | image_url: width: 600, height: 600, crop: 'center'
+                  | image_tag:
+                    class: 'featured-product__img',
+                    alt: product.title,
+                    widths: '250, 300, 500, 600',
+                    sizes: '(min-width: 767px) 300px, 250px',
+                    loading: 'lazy'
+                }}
               {% else %}
                 <img
+                  class="featured-product__img"
                   src="{{ 'placeholder.svg' | asset_url }}"
                   width="300"
                   height="300"
@@ -78,14 +81,16 @@
             <h3 class="featured-product__title">{{ product.title }}</h3>
 
             {% if section.settings.show_price %}
-              <p class="featured-product__price">{{ product.price | money }}</p>
+              <p class="featured-product__price text-medium">{{ product.price | money }}</p>
             {% endif %}
 
             {% if section.settings.show_rating %}
               {% if product.metafields.reviews.rating.value %}
-                <div class="featured-product__rating">⭐ {{ product.metafields.reviews.rating.value }} / 5</div>
+                <div class="featured-product__rating text-medium">
+                  ⭐ {{ product.metafields.reviews.rating.value }} / 5
+                </div>
               {% else %}
-                <div class="featured-product__rating">⭐⭐⭐⭐☆ <span>(4.5/5)</span></div>
+                <div class="featured-product__rating text-medium">⭐⭐⭐⭐☆ <span>(4.5/5)</span></div>
               {% endif %}
             {% endif %}
 
