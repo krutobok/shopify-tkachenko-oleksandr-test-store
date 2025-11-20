@@ -17,14 +17,28 @@
       {% for designer in designers %}
         <div class="designer-card">
           {% if designer.photo.value != blank %}
-            <img
-              src="{{ designer.photo.value | image_url: width: 300 }}"
-              alt="{{ designer.photo.value.alt | default: designer.name | escape }}"
-              class="designer-photo"
-              loading="lazy"
-              width="300"
-              height="{{ 300 | divided_by: designer.photo.value.aspect_ratio | round }}"
-            >
+            {% comment %}
+              <img
+                src="{{ designer.photo.value | image_url: width: 300 }}"
+                alt="{{ designer.photo.value.alt | default: designer.name | escape }}"
+                class="designer-photo"
+                loading="lazy"
+                width="300"
+                height="300"
+              >
+            {% endcomment %}
+            {%- assign image_alt = designer.photo.value.alt | default: designer.name | escape -%}
+
+            {{
+              designer.photo.value
+              | image_url: width: 1400, height: 1000
+              | image_tag:
+                class: 'designer-photo',
+                alt: image_alt,
+                widths: '300, 450, 600, 700, 900, 1200, 1400',
+                sizes: '(min-width: 1400px) 420px, (min-width: 1024px) calc((100vw - 130px) / 3), (min-width: 767px) calc((100vw - 100px) / 2), calc(100vw - 65px)',
+                loading: 'lazy'
+            }}
           {% endif %}
 
           <h3 class="designer-name">{{ designer.name }}</h3>

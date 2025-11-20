@@ -36,9 +36,21 @@
                 {% if img_name contains color_value %}
                   {% assign count = count | plus: 1 %}
                   {% if count <= 5 %}
+                    {%- capture main_image_srcset -%}
+                      {{ image | image_url: width: 320, height: 320}} 320w,
+                      {{ image | image_url: width: 375, height: 375}} 375w,
+                      {{ image | image_url: width: 450, height: 450}} 450w,
+                      {{ image | image_url: width: 536, height: 536}} 536w,
+                      {{ image | image_url: width: 640, height: 640}} 640w,
+                      {{ image | image_url: width: 750, height: 750}} 750w,
+                      {{ image | image_url: width: 900, height: 900}} 900w,
+                      {{ image | image_url: width: 1072, height: 1072}} 1072w
+                    {%- endcapture -%}
+
                     <button
                       class="
-                        w-thumb h-thumb shrink-0 border-none p-0 rounded-lg  aria-selected:relative
+                        w-thumb h-thumb shrink-0 border-none p-0 rounded-lg
+                        aria-selected:relative
                         aria-selected:before:absolute
                         aria-selected:before:inset-0
                         aria-selected:before:z-10
@@ -47,16 +59,24 @@
                       "
                       aria-label="Change main product photo to {{ color_value }} photo {{ count }}"
                       aria-selected="{% if count == 1 %}true{% else %}false{% endif %}"
-                      data-image="{{ image | image_url: width: 536 }}"
                       product__thumb
+                      data-src="{{ image | image_url: width: 1072 }}"
+                      data-srcset="{{ main_image_srcset | strip }}"
+                      data-media-id="{{ image.id }}"
                     >
-                      <img
-                        class="w-thumb h-thumb rounded-lg cursor-pointer"
-                        width="88"
-                        height="88"
-                        src="{{ image | image_url: width: 88, height: 88 }}"
-                        alt="{{ image.alt | default: current_product.title | default: 'Product photo' }}"
-                      >
+                      {%- liquid
+                        assign thumb_image_alt = current_product.featured_image.alt | default: current_product.title | default: 'Фото товару' | escape
+                      -%}
+                      {{
+                        image
+                        | image_url: width: 176, height: 176, crop: 'center'
+                        | image_tag:
+                          class: 'w-thumb h-thumb rounded-lg cursor-pointer',
+                          widths: '88, 176',
+                          sizes: '88px',
+                          alt: thumb_image_alt,
+                          loading: 'lazy'
+                      }}
                     </button>
                   {% endif %}
                 {% endif %}
@@ -76,25 +96,10 @@
                 | image_tag:
                   class: 'max-w-main-image w-full rounded-lg aspect-square product__image',
                   alt: image_alt,
-                  widths: '375, 536, 750, 1072',
-                  sizes: '(min-width: 568px) 536px, calc(100vw - 32px)',
+                  widths: '320, 375, 450, 536, 640, 750, 900, 1072',
+                  sizes: '(min-width: 568px) 536px, calc(100vw - 32px - 15px)',
                   loading: 'lazy'
               }}
-
-              {% comment %}
-                {{
-                  current_product.featured_image
-                  | image_url: width: 1072, height: 1072, crop: 'center'
-                  | image_tag:
-                    class: 'max-w-main-image w-full rounded-lg aspect-square product__image',
-                    alt: current_product.featured_image.alt
-                  | default: current_product.title
-                  | default: 'Фото товару',
-                    widths: '375, 536, 750, 1072',
-                    sizes: '(min-width: 568px) 536px, calc(100vw - 32px)',
-                    loading: 'lazy'
-                }}
-              {% endcomment %}
             {%- else -%}
               {{
                 'placeholder.svg'
@@ -178,7 +183,14 @@
 
           const firstThumb = set.querySelector('button[product__thumb]');
           if (firstThumb) {
-            mainImage.src = firstThumb.dataset.image;
+            if (firstThumb.dataset.src) {
+              mainImage.src = firstThumb.dataset.src;
+            }
+
+            if (firstThumb.dataset.srcset) {
+              mainImage.srcset = firstThumb.dataset.srcset;
+            }
+
             firstThumb.setAttribute('aria-selected', 'true');
           }
         } else {
@@ -213,12 +225,14 @@
   });
   thumbs.forEach((btn) => {
     btn.addEventListener('click', () => {
-      const newImage = btn.dataset.image;
-      mainImage.src = newImage;
+      if (btn.dataset.src) {
+        mainImage.src = btn.dataset.src;
+      }
 
-      thumbs.forEach((t) => {
-        t.setAttribute('aria-selected', 'false');
-      });
+      if (btn.dataset.srcset) {
+        mainImage.srcset = btn.dataset.srcset;
+      }
+      thumbs.forEach((t) => t.setAttribute('aria-selected', 'false'));
       btn.setAttribute('aria-selected', 'true');
     });
   });
@@ -247,17 +261,3 @@
   ]
 }
 {% endschema %}
-
-{% comment %}
-  <script type="application/json" id="VariantInventory-{{ product.id }}">
-  {
-    {%- for v in product.variants -%}
-      "{{ v.id }}": {
-        "available": {{ v.available | json }},
-        "inventory_quantity": {{ v.inventory_quantity | default: 0 | json }},
-        "sku": {{ v.sku | json }}
-      }{% unless forloop.last %},{% endunless %}
-    {%- endfor -%}
-  }
-  </script>
-{% endcomment %}
