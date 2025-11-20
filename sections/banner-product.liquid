@@ -67,18 +67,34 @@
           <div class="max-w-main-image relative w-full">
             {% render 'product-badge', product: current_product %}
             {%- if current_product.featured_image -%}
+              {%- liquid
+                assign image_alt = current_product.featured_image.alt | default: current_product.title | default: 'Фото товару' | escape
+              -%}
               {{
                 current_product.featured_image
                 | image_url: width: 1072, height: 1072, crop: 'center'
                 | image_tag:
                   class: 'max-w-main-image w-full rounded-lg aspect-square product__image',
-                  alt: current_product.featured_image.alt
-                | default: current_product.title
-                | default: 'Фото товару',
-                  widths: '375, 550, 750, 1072',
-                  sizes: '(min-width: 568px) 536px, 375px',
+                  alt: image_alt,
+                  widths: '375, 536, 750, 1072',
+                  sizes: '(min-width: 568px) 536px, calc(100vw - 32px)',
                   loading: 'lazy'
               }}
+
+              {% comment %}
+                {{
+                  current_product.featured_image
+                  | image_url: width: 1072, height: 1072, crop: 'center'
+                  | image_tag:
+                    class: 'max-w-main-image w-full rounded-lg aspect-square product__image',
+                    alt: current_product.featured_image.alt
+                  | default: current_product.title
+                  | default: 'Фото товару',
+                    widths: '375, 536, 750, 1072',
+                    sizes: '(min-width: 568px) 536px, calc(100vw - 32px)',
+                    loading: 'lazy'
+                }}
+              {% endcomment %}
             {%- else -%}
               {{
                 'placeholder.svg'
