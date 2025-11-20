@@ -376,5 +376,33 @@
     {%- if settings.cart_type == 'drawer' -%}
       <script src="{{ 'cart-drawer.js' | asset_url }}" defer="defer"></script>
     {%- endif -%}
+
+    {% comment %}
+            <script>
+              console.log('%c[TEST] Heavy Script: STARTING...', 'color: red; font-weight: bold;');
+
+              const startTime = performance.now();
+              const duration = 3000;
+
+              let result = 0;
+              while (performance.now() - startTime < duration) {
+                result += Math.random() * Math.sin(Math.random());
+              }
+
+              const endTime = performance.now();
+              console.log(
+                `%c[TEST] Heavy Script: FINISHED. Blocked for ${Math.round(endTime - startTime)}ms.`,
+                'color: red; font-weight: bold;'
+              );
+            </script>
+
+
+          {{ 'script-test.js' | asset_url | script_tag }}
+
+
+        <script src="{{ 'script-test.js' | asset_url }}" defer></script>
+
+      {% section 'test-script' %}
+    {% endcomment %}
   </body>
 </html>

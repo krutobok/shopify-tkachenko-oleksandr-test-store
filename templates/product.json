@@ -84,6 +84,7 @@
     },
     "related-products": {
       "type": "related-products",
+      "disabled": true,
       "settings": {
         "heading": "You may also like",
         "heading_size": "h2",
@@ -106,11 +107,20 @@
       "settings": {
         "title": "Product Form Custom"
       }
+    },
+    "product_recommendations_carousel_pheDRX": {
+      "type": "product-recommendations-carousel",
+      "name": "Product Recommendations",
+      "settings": {
+        "title": "You might also like",
+        "limit": 8
+      }
     }
   },
   "order": [
     "main",
     "related-products",
+    "product_recommendations_carousel_pheDRX",
     "products_form_8hTWFB"
   ]
 }

@@ -1,0 +1,127 @@
+:root {
+  --rc-container-padding: 24px;
+  --rc-container-size: 1320px;
+  --primary-color: #111111;
+  --primary-bg-color: #ffffff;
+  --secondary-color: #737373;
+  --border-color: #ebebeb;
+  --rc-grid-gap: 24px;
+  --rc-max-width-img: 312px;
+}
+
+.container {
+  max-width: calc(var(--rc-container-size) + var(--rc-container-padding) * 2);
+  padding: 0;
+  margin: 0 auto;
+  width: 100%;
+}
+.recs-carousel {
+  padding: 80px 0;
+}
+
+.recs-carousel__title {
+  margin-bottom: 48px;
+  text-align: center;
+  padding: 0 25px;
+  font-size: 30px;
+  line-height: 36px;
+  color: var(--color-primary);
+}
+
+.recs-carousel__swiper {
+  padding: 0 var(--rc-container-padding);
+}
+
+.recs-carousel__product-img {
+  margin-bottom: 16px;
+  display: block;
+  width: 100%;
+  max-width: var(--rc-max-width-img);
+  aspect-ratio: 1;
+}
+
+.recs-carousel__product-title {
+  margin-bottom: 8px;
+  color: var(--color-primary);
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.recs-carousel__product-price {
+  color: var(--secondary-color);
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.swiper-button-next.recs-carousel__swiper-button-next,
+.swiper-button-prev.recs-carousel__swiper-button-prev {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--primary-bg-color);
+  border: 1px solid var(--border-color);
+  right: 4px;
+  left: auto;
+
+  top: calc(
+    (100vw - (var(--rc-container-padding) * 2) - (var(--rc-grid-gap) * 3)) / 8
+  );
+}
+
+.swiper-button-prev.recs-carousel__swiper-button-prev {
+  right: auto;
+  left: 4px;
+}
+
+.swiper-button-next.recs-carousel__swiper-button-next::after,
+.swiper-button-prev.recs-carousel__swiper-button-prev::after {
+  content: "";
+  width: 16px;
+  height: 16px;
+
+  background-image: url("arrowIcon.svg");
+  background-size: cover;
+}
+
+.recs-carousel__swiper-button-prev::after {
+  transform: rotate(180deg);
+}
+.swiper-navigation-icon {
+  display: none;
+}
+.recs-carousel .swiper-button-disabled {
+  display: none;
+}
+
+/*   
+    Логіку підрахунку правильного розміщення стрілок переніс з тестової роботи
+    Брекпоінт відповідає максимальній ширині контейнеру
+*/
+@media (min-width: 1368px) {
+  .swiper-button-next.recs-carousel__swiper-button-next,
+  .swiper-button-prev.recs-carousel__swiper-button-prev {
+    top: calc((var(--rc-container-size) - (var(--rc-grid-gap) * 3)) / 8);
+  }
+}
+
+@media (max-width: 1279px) {
+  .swiper-button-next.recs-carousel__swiper-button-next,
+  .swiper-button-prev.recs-carousel__swiper-button-prev {
+    top: calc(var(--rc-max-width-img) / 2);
+  }
+}
+/*  Брекпоінт відповідає моменту, коли зображення почнуть зменшуватися */
+@media (max-width: 876px) {
+  .swiper-button-next.recs-carousel__swiper-button-next,
+  .swiper-button-prev.recs-carousel__swiper-button-prev {
+    top: calc(
+      (100vw - var(--rc-container-padding) - (var(--rc-grid-gap) * 2)) / 5
+    );
+  }
+}
+@media (max-width: 768px) {
+  .recs-carousel__product-title {
+    font-size: 24px;
+    line-height: 30px;
+  }
+}
