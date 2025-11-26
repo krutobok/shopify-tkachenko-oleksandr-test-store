@@ -1,6 +1,9 @@
 {{ 'featured-products.css' | asset_url | stylesheet_tag }}
 
-<section id="featured-products-{{ section.id }}" class="featured-products-section section-{{ section.id }}">
+<section
+  id="featured-products-{{ section.id }}"
+  class="featured-products-section section-{{ section.id }}"
+>
   {%- assign collection_handle = section.settings.collection -%}
   {%- assign collection = collections[collection_handle] -%}
 
@@ -11,11 +14,15 @@
 
     {% if collection and collection.products_count > 0 %}
       <div class="featured-products__controls">
-        <label for="sort-by " class="text-large">Сортувати:</label>
+        <label for="sort-by" class="text-large">Сортувати:</label>
 
         {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
 
-        <select id="sort-by" class="featured-products__sort text-large" data-section-id="{{ section.id }}">
+        <select
+          id="sort-by"
+          class="featured-products__sort text-large focus-visible:ring-2! focus-visible:ring-primary!"
+          data-section-id="{{ section.id }}"
+        >
           <option
             value="best-selling"
             {% if sort_by == 'best-selling' %}
@@ -54,7 +61,10 @@
       <div class="featured-products__grid">
         {% for product in collection.products limit: section.settings.products_count %}
           <div class="featured-product">
-            <a href="{{ product.url }}" class="featured-product__image">
+            <a
+              href="{{ product.url }}"
+              class="featured-product__img-link"
+            >
               {% if product.featured_image %}
                 {{
                   product.featured_image
@@ -72,7 +82,7 @@
                   src="{{ 'placeholder.svg' | asset_url }}"
                   width="300"
                   height="300"
-                  alt="Placeholder"
+                  alt="Зображення відсутнє"
                   loading="lazy"
                 >
               {% endif %}
@@ -85,20 +95,31 @@
             {% endif %}
 
             {% if section.settings.show_rating %}
-              {% if product.metafields.reviews.rating.value %}
-                <div class="featured-product__rating text-medium">
-                  ⭐ {{ product.metafields.reviews.rating.value }} / 5
-                </div>
-              {% else %}
-                <div class="featured-product__rating text-medium">⭐⭐⭐⭐☆ <span>(4.5/5)</span></div>
-              {% endif %}
+              {%- liquid
+                assign rating_value = product.metafields.reviews.rating.value | default: 4.5
+                assign rating_max = 5
+              -%}
+              <div
+                class="featured-product__rating text-medium"
+                role="img"
+                aria-label="Рейтинг: {{ rating_value }} із {{ rating_max }}"
+              >
+                <span aria-hidden="true">
+                  {% if product.metafields.reviews.rating.value %}
+                    ⭐ {{ product.metafields.reviews.rating.value }} / 5
+                  {% else %}
+                    ⭐⭐⭐⭐☆ (4.5/5)
+                  {% endif %}
+                </span>
+              </div>
             {% endif %}
 
             {% if section.settings.show_add_to_cart %}
               <button
-                class="btn add-to-cart btn-dark"
+                class="btn add-to-cart btn-dark focus-visible:ring-4! focus-visible:ring-secondary!"
                 data-product-id="{{ product.variants.first.id }}"
                 data-section-id="{{ section.id }}"
+                aria-label="Додати в кошик: {{ product.title }}"
               >
                 Додати в кошик
               </button>

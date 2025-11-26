@@ -55,6 +55,7 @@
                         aria-selected:before:inset-0
                         aria-selected:before:z-10
                         aria-selected:before:rounded-lg
+                        focus-visible:ring-2! focus-visible:ring-primary!
                         aria-selected:before:bg-primary/20
                       "
                       aria-label="Change main product photo to {{ color_value }} photo {{ count }}"
@@ -71,7 +72,7 @@
                         image
                         | image_url: width: 176, height: 176, crop: 'center'
                         | image_tag:
-                          class: 'w-thumb h-thumb rounded-lg cursor-pointer',
+                          class: 'w-thumb h-thumb rounded-lg cursor-pointer ',
                           widths: '88, 176',
                           sizes: '88px',
                           alt: thumb_image_alt,
@@ -136,19 +137,31 @@
           <div>
             <p class="mb-3 text-medium">Select Size:</p>
             <div class="custom-grid grid-cols-2 gap-2 md:grid-cols-3">
-              <button class="text-medium border border-solid border-primary btn">UK 5.5</button>
-              <button class="text-medium btn border border-solid border-border">UK 6 (EU 39)</button>
-              <button class="text-medium btn border border-solid border-border">UK 6 (EU 40)</button>
-              <button class="text-medium btn border border-solid border-border">UK 6.5</button>
-              <button class="text-medium btn border border-solid border-border">UK 7</button>
-              <button class="text-medium btn border border-solid border-border">UK 7.5</button>
+              <button class="text-medium border border-solid border-primary/60  btn focus-visible:ring-2! focus-visible:ring-primary!">
+                UK 5.5
+              </button>
+              <button class="text-medium btn border border-solid border-border focus-visible:ring-2! focus-visible:ring-primary!">
+                UK 6 (EU 39)
+              </button>
+              <button class="text-medium btn border border-solid border-border focus-visible:ring-2! focus-visible:ring-primary!">
+                UK 6 (EU 40)
+              </button>
+              <button class="text-medium btn border border-solid border-border focus-visible:ring-2! focus-visible:ring-primary!">
+                UK 6.5
+              </button>
+              <button class="text-medium btn border border-solid border-border focus-visible:ring-2! focus-visible:ring-primary!">
+                UK 7
+              </button>
+              <button class="text-medium btn border border-solid border-border focus-visible:ring-2! focus-visible:ring-primary!">
+                UK 7.5
+              </button>
             </div>
           </div>
 
           <a
             id="add-to-cart-link"
             href="{{routes.cart_add_url}}?id={{ current_product.selected_or_first_available_variant.id }}&quantity=1"
-            class="btn block text-center bg-primary text-primary-bg hover:bg-secondary"
+            class="btn block text-center bg-primary text-primary-bg hover:bg-secondary focus-visible:ring-4! focus-visible:ring-secondary!"
           >
             Add To Bag
           </a>
