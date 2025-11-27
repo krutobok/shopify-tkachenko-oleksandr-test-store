@@ -55,6 +55,7 @@
                         aria-selected:before:inset-0
                         aria-selected:before:z-10
                         aria-selected:before:rounded-lg
+                        focus-visible:ring-2! focus-visible:ring-primary!
                         aria-selected:before:bg-primary/20
                       "
                       aria-label="Change main product photo to {{ color_value }} photo {{ count }}"
@@ -65,13 +66,13 @@
                       data-media-id="{{ image.id }}"
                     >
                       {%- liquid
-                        assign thumb_image_alt = current_product.featured_image.alt | default: current_product.title | default: 'Фото товару' | escape
+                        assign thumb_image_alt = current_product.featured_image.alt | default: current_product.title | prepend: 'Фото ' | append: ' ' | append: count | default: 'Фото товару' | escape
                       -%}
                       {{
                         image
                         | image_url: width: 176, height: 176, crop: 'center'
                         | image_tag:
-                          class: 'w-thumb h-thumb rounded-lg cursor-pointer',
+                          class: 'w-thumb h-thumb rounded-lg cursor-pointer ',
                           widths: '88, 176',
                           sizes: '88px',
                           alt: thumb_image_alt,
@@ -125,9 +126,8 @@
           {%- if color_index != -1 -%}
             <div>
               <p class="text-medium  mb-1.5">{{ 'product.banner.select_color' | t: default: 'Оберіть колір:' }}</p>
-              <div class="flex gap-2 text-medium">
-                {% render 'product-colors', product: current_product, color_index: color_index %}
-              </div>
+
+              {% render 'product-colors', product: current_product, color_index: color_index %}
             </div>
           {%- else -%}
             <p>No color option found for this product.</p>
@@ -136,19 +136,31 @@
           <div>
             <p class="mb-3 text-medium">Select Size:</p>
             <div class="custom-grid grid-cols-2 gap-2 md:grid-cols-3">
-              <button class="text-medium border border-solid border-primary btn">UK 5.5</button>
-              <button class="text-medium btn border border-solid border-border">UK 6 (EU 39)</button>
-              <button class="text-medium btn border border-solid border-border">UK 6 (EU 40)</button>
-              <button class="text-medium btn border border-solid border-border">UK 6.5</button>
-              <button class="text-medium btn border border-solid border-border">UK 7</button>
-              <button class="text-medium btn border border-solid border-border">UK 7.5</button>
+              <button class="text-medium border border-solid border-primary/60  btn focus-visible:ring-2! focus-visible:ring-primary!">
+                UK 5.5
+              </button>
+              <button class="text-medium btn border border-solid border-border focus-visible:ring-2! focus-visible:ring-primary!">
+                UK 6 (EU 39)
+              </button>
+              <button class="text-medium btn border border-solid border-border focus-visible:ring-2! focus-visible:ring-primary!">
+                UK 6 (EU 40)
+              </button>
+              <button class="text-medium btn border border-solid border-border focus-visible:ring-2! focus-visible:ring-primary!">
+                UK 6.5
+              </button>
+              <button class="text-medium btn border border-solid border-border focus-visible:ring-2! focus-visible:ring-primary!">
+                UK 7
+              </button>
+              <button class="text-medium btn border border-solid border-border focus-visible:ring-2! focus-visible:ring-primary!">
+                UK 7.5
+              </button>
             </div>
           </div>
 
           <a
             id="add-to-cart-link"
             href="{{routes.cart_add_url}}?id={{ current_product.selected_or_first_available_variant.id }}&quantity=1"
-            class="btn block text-center bg-primary text-primary-bg hover:bg-secondary"
+            class="btn block text-center bg-primary text-primary-bg hover:bg-secondary focus-visible:ring-4! focus-visible:ring-secondary!"
           >
             Add To Bag
           </a>
@@ -162,78 +174,99 @@
   </div>
 </section>
 <script>
-  const colorButtons = document.querySelectorAll('img[product-color]');
-  const thumbs = document.querySelectorAll('button[product__thumb]');
-  const thumbnailSets = document.querySelectorAll('div[product__thumbnails-set]');
-  const mainImage = document.querySelector('.product__image');
-  const priceWrapper = document.querySelector('p[product-price]');
-  const addToCartLink = document.getElementById('add-to-cart-link');
+  document.addEventListener('DOMContentLoaded', () => {
+    const colorButtons = document.querySelectorAll('button[product-color]');
+    const thumbs = document.querySelectorAll('button[product__thumb]');
+    const thumbnailSets = document.querySelectorAll('div[product__thumbnails-set]');
+    const mainImage = document.querySelector('.product__image');
+    const priceWrapper = document.querySelector('p[product-price]');
+    const addToCartLink = document.getElementById('add-to-cart-link');
+    const stockMessage = document.getElementById('stock-status-message');
 
-  colorButtons.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const selectedColor = btn.dataset.color.toLowerCase().replace(/\s+/g, '-');
+    function updateActiveState(targetBtn) {
+      colorButtons.forEach((btn) => {
+        const isSelected = btn === targetBtn;
 
-      colorButtons.forEach((c) => c.classList.remove('border', 'border-solid', 'border-primary'));
-      btn.classList.add('border', 'border-solid', 'border-primary');
-
-      thumbnailSets.forEach((set) => {
-        if (set.dataset.color === selectedColor) {
-          set.classList.add('flex');
-          set.classList.remove('hidden');
-
-          const firstThumb = set.querySelector('button[product__thumb]');
-          if (firstThumb) {
-            if (firstThumb.dataset.src) {
-              mainImage.src = firstThumb.dataset.src;
-            }
-
-            if (firstThumb.dataset.srcset) {
-              mainImage.srcset = firstThumb.dataset.srcset;
-            }
-
-            firstThumb.setAttribute('aria-selected', 'true');
-          }
+        if (isSelected) {
+          btn.classList.add('border-primary');
+          btn.classList.remove('border-transparent', 'hover:border-secondary/20');
         } else {
-          set.classList.add('hidden');
-          set.classList.remove('flex');
+          btn.classList.remove('border-primary');
+          btn.classList.add('border-transparent', 'hover:border-secondary/20');
+        }
+
+        btn.setAttribute('aria-selected', isSelected);
+      });
+    }
+
+    colorButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const selectedColor = btn.dataset.color.toLowerCase().replace(/\s+/g, '-');
+
+        updateActiveState(btn);
+
+        thumbnailSets.forEach((set) => {
+          if (set.dataset.color === selectedColor) {
+            set.classList.add('flex');
+            set.classList.remove('hidden');
+
+            const firstThumb = set.querySelector('button[product__thumb]');
+            if (firstThumb) {
+              if (firstThumb.dataset.src) mainImage.src = firstThumb.dataset.src;
+              if (firstThumb.dataset.srcset) mainImage.srcset = firstThumb.dataset.srcset;
+
+              thumbs.forEach((t) => t.setAttribute('aria-selected', 'false'));
+              firstThumb.setAttribute('aria-selected', 'true');
+            }
+          } else {
+            set.classList.add('hidden');
+            set.classList.remove('flex');
+          }
+        });
+
+        const variantId = btn.dataset.variantId;
+        if (variantId && addToCartLink) {
+          addToCartLink.href = `/cart/add?id=${variantId}&quantity=1`;
+
+          if (btn.dataset.available === 'false') {
+            addToCartLink.classList.add('opacity-50', 'pointer-events-none');
+            addToCartLink.textContent = 'Немає в наявності';
+          } else {
+            addToCartLink.classList.remove('opacity-50', 'pointer-events-none');
+            addToCartLink.textContent = 'Додати в кошик';
+          }
+        }
+
+        const price = btn.dataset.price;
+        const comparePrice = btn.dataset.comparePrice;
+        if (priceWrapper) {
+          const pVal = parseFloat(price.replace(/[^0-9.]/g, ''));
+          const cVal = comparePrice ? parseFloat(comparePrice.replace(/[^0-9.]/g, '')) : 0;
+
+          if (comparePrice && cVal > pVal) {
+            priceWrapper.innerHTML = `
+              <span>${price}</span>
+              <span class="line-through text-gray-500 ml-2">${comparePrice}</span>
+            `;
+          } else {
+            priceWrapper.innerHTML = `<span>${price}</span>`;
+          }
+        }
+
+        if (stockMessage && btn.dataset.message) {
+          stockMessage.textContent = btn.dataset.message;
         }
       });
-
-      const variantId = btn.dataset.variantId;
-      if (variantId) {
-        addToCartLink.href = `/cart/add?id=${variantId}&quantity=1`;
-      }
-
-      const price = btn.dataset.price;
-      const comparePrice = btn.dataset.comparePrice;
-      if (
-        comparePrice &&
-        parseFloat(comparePrice.replace(/[^0-9.]/g, '')) > parseFloat(price.replace(/[^0-9.]/g, ''))
-      ) {
-        priceWrapper.innerHTML = `
-        <span>${price}</span>
-        <span class="line-through">${comparePrice}</span>
-      `;
-      } else {
-        priceWrapper.innerHTML = `
-        <span>${price}</span>
-      `;
-      }
-
-      alert(btn.dataset.message);
     });
-  });
-  thumbs.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      if (btn.dataset.src) {
-        mainImage.src = btn.dataset.src;
-      }
 
-      if (btn.dataset.srcset) {
-        mainImage.srcset = btn.dataset.srcset;
-      }
-      thumbs.forEach((t) => t.setAttribute('aria-selected', 'false'));
-      btn.setAttribute('aria-selected', 'true');
+    thumbs.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        if (btn.dataset.src) mainImage.src = btn.dataset.src;
+        if (btn.dataset.srcset) mainImage.srcset = btn.dataset.srcset;
+
+        thumbs.forEach((t) => t.setAttribute('aria-selected', 'false'));
+        btn.setAttribute('aria-selected', 'true');
+      });
     });
   });
 </script>

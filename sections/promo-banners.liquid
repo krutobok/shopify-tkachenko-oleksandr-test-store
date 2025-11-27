@@ -47,7 +47,7 @@
               height="{{ img_h }}"
               loading="lazy"
               decoding="async"
-              alt="{{ block.settings.title | escape | default: shop.name }}"
+              alt="{{ block.settings.title | escape | default: shop.name | prepend: 'Фото ' }}"
               style="aspect-ratio: {{ block.settings.aspect_ratio }}"
             >
           {%- else -%}
@@ -65,7 +65,13 @@
           <div class="promo-content">
             <h3>{{- block.settings.title -}}</h3>
             {%- if block.settings.button_text and block.settings.button_link -%}
-              <a href="{{ block.settings.button_link }}" class="btn">{{- block.settings.button_text -}}</a>
+              <a
+                href="{{ block.settings.button_link }}"
+                class="btn focus-visible:ring-2! focus-visible:ring-primary! focus-visible:outline-none!"
+                aria-label="{{ block.settings.button_text }} - {{ block.settings.title | escape -}}"
+              >
+                {{- block.settings.button_text -}}
+              </a>
             {%- endif -%}
           </div>
         </div>

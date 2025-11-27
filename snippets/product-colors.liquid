@@ -1,27 +1,50 @@
-{%- for variant in product.variants limit: 3 -%}
-  {%- assign color_value = variant.options[color_index] -%}
-  {%- assign image = variant.featured_image -%}
+<div class="flex gap-2 text-medium flex-wrap">
+  <p id="stock-status-message" class="text-sm mt-2 mb-4 font-medium basis-full" role="status" aria-live="polite">
+    {%- assign current_variant = product.selected_or_first_available_variant -%}
+    {%- if current_variant.inventory_quantity > 0 -%}
+      {{
+        'product.banner.available_with_count'
+        | t: count: current_variant.inventory_quantity
+        | default: 'Доступно: %count%'
+        | replace: '%count%', current_variant.inventory_quantity
+      }}
+    {%- else -%}
+      {{ 'product.banner.not_available' | t: default: 'Не доступно' }}
+    {%- endif -%}
+  </p>
 
-  <img
-    class="w-thumb h-thumb rounded-lg cursor-pointer{% if forloop.first %} border border-solid border-primary{% endif %}"
-    src="{{ image | image_url: width: 88, height: 88 }}"
-    width="88"
-    height="88"
-    alt="{% if image.alt != blank %}{{ image.alt }}{% elsif product.title != blank %}{{ product.title }}{% else %}Color option{% endif %}"
-    data-color="{{ color_value | handleize }}"
-    data-variant-id="{{ variant.id }}"
-    data-message="
-      {%- if variant.inventory_quantity > 0 -%}
-        {{ 'product.banner.available_with_count' | t: count: variant.inventory_quantity | default: 'Доступно: %count%' | replace: '%count%', variant.inventory_quantity }}
-      {%- else -%}
-        {{ 'product.banner.not_available' | t: default: 'Не доступно' }}
-      {%- endif -%}
-    "
-    data-price="{{ variant.price | money_without_trailing_zeros }}"
-    data-compare-price="{{ variant.compare_at_price | money_without_trailing_zeros }}"
-    data-available="{{ variant.available }}"
-    role="button"
-    aria-label="Set product color to {{ color_value }}"
-    product-color
-  >
-{%- endfor -%}
+  {%- for variant in product.variants limit: 3 -%}
+    {%- assign color_value = variant.options[color_index] -%}
+    {%- assign image = variant.featured_image -%}
+    {%- assign is_active = false -%}
+    {%- if forloop.first -%}{%- assign is_active = true -%}{%- endif -%}
+
+    <button
+      type="button"
+      class="
+        group relative w-thumb h-thumb p-0.5 rounded-lg border-2 cursor-pointer
+        focus:outline-none focus-visible:ring-2! focus-visible:ring-offset-2! focus-visible:ring-primary!
+        {% if is_active %}border-primary{% else %}border-transparent hover:border-secondary/20{% endif %}
+      "
+      aria-selected="{{ is_active }}"
+      aria-label="Select color {{ color_value }}"
+
+      product-color
+      data-color="{{ color_value | handleize }}"
+      data-variant-id="{{ variant.id }}"
+      data-price="{{ variant.price | money_without_trailing_zeros }}"
+      data-compare-price="{{ variant.compare_at_price | money_without_trailing_zeros }}"
+      data-available="{{ variant.available }}"
+      data-message="{%- if variant.inventory_quantity > 0 -%}{{ 'product.banner.available_with_count' | t: count: variant.inventory_quantity | default: 'Доступно: %count%' | replace: '%count%', variant.inventory_quantity }}{%- else -%}{{ 'product.banner.not_available' | t: default: 'Не доступно' }}{%- endif -%}"
+    >
+      <img
+        class="w-full h-full object-cover rounded-md"
+        src="{{ image | image_url: width: 88, height: 88 }}"
+        width="88"
+        height="88"
+        alt="{{ image.alt | default: color_value | escape }}"
+        loading="lazy"
+      >
+    </button>
+  {%- endfor -%}
+</div>

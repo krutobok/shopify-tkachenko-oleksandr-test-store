@@ -3,40 +3,28 @@
 <section class="designers">
   <div class="container">
     {% if section.settings.title != blank %}
-      <h2 class="designers__title">{{ section.settings.title }}</h2>
+      <h2 class="designers__title">
+        {{ section.settings.title }}
+      </h2>
     {% endif %}
 
     {% assign featured_collection = collections[section.settings.featured_collection] %}
     {% assign designers = featured_collection.metafields.custom.designer.value %}
-    {% assign designers_count = 0 %}
-    {% for designer in designers %}
-      {%- assign designers_count = designers_count | plus: 1 -%}
-    {% endfor %}
 
-    <div class="designers__grid">
+    <ul class="designers__grid list-none p-0 m-0">
       {% for designer in designers %}
-        <div class="designer-card">
+        <li class="designer-card">
           {% if designer.photo.value != blank %}
-            {% comment %}
-              <img
-                src="{{ designer.photo.value | image_url: width: 300 }}"
-                alt="{{ designer.photo.value.alt | default: designer.name | escape }}"
-                class="designer-photo"
-                loading="lazy"
-                width="300"
-                height="300"
-              >
-            {% endcomment %}
-            {%- assign image_alt = designer.photo.value.alt | default: designer.name | escape -%}
-
+            {% assign alt_photo = 'Фото: ' | append: designer.name %}
             {{
               designer.photo.value
               | image_url: width: 1400, height: 1000
               | image_tag:
                 class: 'designer-photo',
-                alt: image_alt,
+                alt: alt_photo,
                 widths: '300, 450, 600, 700, 900, 1200, 1400',
-                sizes: '(min-width: 1400px) 420px, (min-width: 1024px) calc((100vw - 130px) / 3), (min-width: 767px) calc((100vw - 100px) / 2), calc(100vw - 65px)',
+                sizes: '(min-width: 1400px) 420px, (min-width: 1024px)
+              calc((100vw - 130px) / 3), (min-width: 767px) calc((100vw - 100px) / 2), calc(100vw - 65px)',
                 loading: 'lazy'
             }}
           {% endif %}
@@ -45,26 +33,37 @@
           <p class="designer-role">{{ designer.role }}</p>
           <p class="designer-bio">{{ designer.bio }}</p>
 
-          <div class="designer-tags">
+          <ul class="designer-tags list-none p-0" aria-label="Tags for {{ designer.name }}">
             {% for tag in designer.tags.value %}
-              <span class="tag">{{ tag }}</span>
+              <li class="tag">{{ tag }}</li>
             {% endfor %}
-          </div>
+          </ul>
 
           <div class="designer-links">
             {% for link in designer.portfolio_links.value %}
-              <a href="{{ link }}" target="_blank">{{ link }}</a>
+              <a
+                href="{{ link }}"
+                class="focus-visible:ring-2! focus-visible:ring-primary!"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Portfolio link for {{ designer.name }} (opens in a new tab)"
+              >
+                {{- link | truncate: 30 -}}
+                <span aria-hidden="true">↗</span>
+              </a>
             {% endfor %}
           </div>
 
           <p class="designer-date">Born: {{ designer.birth_date | date: '%B %d, %Y' }}</p>
 
           {% if designer.verified %}
-            <span class="verified">✅ Verified Designer</span>
+            <span class="verified" role="img" aria-label="Verified Designer">
+              <span aria-hidden="true">✅</span> Verified Designer
+            </span>
           {% endif %}
-        </div>
+        </li>
       {% endfor %}
-    </div>
+    </ul>
   </div>
 </section>
 
