@@ -5,7 +5,6 @@
 
 .designers__title {
   font-size: 1.9rem;
-
   text-align: center;
   margin-top: 0;
   margin-bottom: 40px;
@@ -45,35 +44,34 @@
 .designer-name {
   font-size: 1.2rem;
   font-weight: 600;
-  color: #333;
+  color: #333333;
   margin: 20px 25px 5px 25px;
 }
 
 .designer-role {
   font-size: 1rem;
   font-weight: 500;
-  color: #007bff;
+  color: #0056b3;
   margin: 0 25px 15px 25px;
   font-style: italic;
 }
 
 .designer-bio {
-  font-size: 0.8rem;
-  color: #555;
+  font-size: 0.875rem;
+  color: #444444;
   line-height: 1.6;
   margin: 0 25px 20px 25px;
   flex-grow: 1;
 }
 
 .designer-date {
-  font-size: 0.7rem;
-  color: #777;
+  font-size: 0.75rem;
+  color: #595959;
   margin: 0 25px 15px 25px;
   border-top: 1px solid #eee;
   padding-top: 15px;
 }
 
-/* --- Теги --- */
 .designer-tags {
   display: flex;
   flex-wrap: wrap;
@@ -83,15 +81,14 @@
 
 .tag {
   background-color: #eef1f4;
-  color: #506a80;
+  color: #2c3e50;
   padding: 5px 12px;
   border-radius: 20px;
-  font-size: 0.7rem;
-  font-weight: 500;
+  font-size: 0.75rem;
+  font-weight: 600;
   white-space: nowrap;
 }
 
-/* --- Посилання --- */
 .designer-links {
   display: flex;
   flex-direction: column;
@@ -100,21 +97,22 @@
 }
 
 .designer-links a {
-  color: #0056b3;
-  text-decoration: none;
-  font-weight: 500;
-  font-size: 0.6rem;
+  color: #004494;
+  text-decoration: underline;
+  font-weight: 600;
+  font-size: 0.75rem;
 }
 
 .designer-links a:hover {
-  text-decoration: underline;
+  text-decoration: none;
+  color: #002a5c;
 }
 
 .verified {
   display: block;
   font-size: 0.8rem;
   font-weight: 600;
-  color: #28a745;
+  color: #155724;
   margin: 0 25px 25px 25px;
 }
 
